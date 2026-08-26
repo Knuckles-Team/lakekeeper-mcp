@@ -57,25 +57,42 @@ declaration for `lakekeeper_set_engine_owned` is deferred until CA-32 lands.
 The tool itself is fully implemented and callable now.
 
 ## connector_manifest.yml gate status
-`connector_manifest.yml` is generated (via `agent-utilities`'s
-`scripts/generate_connector_manifests.py`, with its `registry_server_alias`
-lookup stubbed locally since `lakekeeper-mcp` is not yet an entry in
-`agent-utilities/deploy/mcp-fleet.registry.yml` — CA-29's job, once per wave)
-and is structurally valid: resources/relations/actions/schema_mappings all
-derive correctly from `lakekeeper_mcp/ontology/lakekeeper.ttl`, and its
-`provenance.integrity.hash` is the real recomputed URDNA2015 hash, not a
-placeholder. `scripts/check_connector_manifests.py --manifest
-connector_manifest.yml` (agent-utilities) still reports ONE violation:
-`[anti-sprawl] <http://knuckles.team/kg/lakekeeper> is not owl:imports-ed by
-the canonical ontology.ttl and is not a registered federated module`. The
-federation whitelist (`agent_utilities/knowledge_graph/core/
-ontology_federation.py`'s `REGISTERED_FEDERATED_IRIS` tuple) lives in the
-`agent-utilities` repo, which is **out of this lane's scope** (the lane
-contract names only `agent-packages/agents` and `services` as repositories
-this lane touches) — adding the one-line entry is a follow-up for whichever
-lane/PR onboards `lakekeeper-mcp`'s ontology into `agent-utilities` core
-(the same pattern `jena`/`egeria` went through). Not a defect in this
-package's own manifest or ontology.
+`connector_manifest.yml` and the full capability certification bundle
+(`lakekeeper_mcp/ontology/{certification.json,shapes/connector.shacl.ttl,
+mappings/source.yaml,fixtures/records.json,migrations/manifest.json}`) are
+generated via `agent-utilities`'s real generator scripts
+(`generate_connector_manifests.py` / `generate_connector_capability_bundles.py`),
+same shape as every other connector in the fleet. The registration work
+needed to unblock this (workspace.yml's three mirrors, four hardcoded
+68->69 fleet-count constants across agent-utilities, the bundle
+generation itself) is done — see the `agent-utilities` branch
+`ca/ca-40-lakekeeper-mcp-registration` for the full accounting.
+
+**One remaining, well-evidenced blocker**, confirmed via a direct
+`check_one()` call (not inferred): `lakekeeper-mcp` has exactly ONE
+violation, `"certification differs from its signed release pin"`,
+because it has no entry yet in `agent_utilities/knowledge_graph/
+ontology.lock`. `scripts/update_ontology_lock.py` requires a trusted
+release-signing public key
+(`ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY_REF`, documented as
+`vault://agent-utilities#ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY@2` in
+`docs/architecture/drift_proof_release.md`) that is not configured in
+this environment; both `OPENBAO_TOKEN` and `OPENBAO_ADMIN_TOKEN`
+available here return `permission denied` against
+`apps/data/agent-utilities`. This needs whoever holds that key's
+custody to run `update_ontology_lock.py` once — a one-shot,
+already-safe (atomic, no-op-on-failure) operation, not a design gap in
+this package.
+
+Separately (lower priority, does not block the release-catalog gate):
+`scripts/check_connector_manifests.py --manifest connector_manifest.yml`
+still reports one `[anti-sprawl]` violation because
+`http://knuckles.team/kg/lakekeeper` is not yet in `agent-utilities`'s
+`REGISTERED_FEDERATED_IRIS` whitelist
+(`agent_utilities/knowledge_graph/core/ontology_federation.py`) — the
+same onboarding step `jena`/`egeria` went through. Also a follow-up in
+`agent-utilities`, not a defect in this package's own manifest or
+ontology.
 
 ## ⛔ Keep the Repository Root Pristine — No Scratch / Temp / Debug Files
 
