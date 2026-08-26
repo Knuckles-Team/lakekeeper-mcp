@@ -1,0 +1,34 @@
+{
+  "api_version": "graphos.io/v1",
+  "artifacts": {
+    "connector_manifest.yml": "5a379f4e340c7870d645d575282ab305dc1b411795d16750918e5c44dede5ad0",
+    "lakekeeper_mcp/ontology/fixtures/records.json": "2a3d8d68bec9d4488d4225b3cb4b0fc41f4b5409b412066b86a70393ae8aec8d",
+    "lakekeeper_mcp/ontology/lakekeeper.ttl": "212ea78bc4f4c79b4e9113eaab5a2e5e70ecd9e21bd4656298892a410a31e6cb",
+    "lakekeeper_mcp/ontology/mappings/source.yaml": "6908ca1bf4cca26256cfc8d0b156e4da4e5546d8e1f47bffcb7ae442ddad4d47",
+    "lakekeeper_mcp/ontology/migrations/manifest.json": "bf956c04d632e276100c810c6ce25a84416f94624ce77046f91ac48fa4edc92e",
+    "lakekeeper_mcp/ontology/shapes/connector.shacl.ttl": "d744f80cd1d87fb69062f436b279443908363a26d79b4128fd59adc841ff7124"
+  },
+  "checks": {
+    "declared_tool_schema": "not-applicable",
+    "manifest_integrity": "passed",
+    "privacy_contract": "passed",
+    "shacl_parse": "passed",
+    "synthetic_fixture_contract": "not-applicable"
+  },
+  "compatibility": {
+    "agent_utilities": ">=2.5.0,<3",
+    "bundle_schema": "2",
+    "epistemic_graph": ">=2.27.0,<3"
+  },
+  "connector": "lakekeeper-mcp",
+  "kind": "ConnectorSourceAttestation",
+  "live_certified": false,
+  "mode": "offline-source",
+  "schema_version": "2",
+  "signature": null,
+  "signature_algorithm": "none",
+  "signer": "UNSIGNED-PREVIEW",
+  "signing_public_key": "",
+  "status": "source-validated",
+  "validated_at": "2026-08-26T20:09:33Z"
+}

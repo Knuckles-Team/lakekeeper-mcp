@@ -91,7 +91,7 @@ schema_mappings:
 sync: []
 provenance:
   generated_by: scripts/generate_connector_manifests.py
-  generated_at: '2026-08-26T19:40:31Z'
+  generated_at: '2026-08-26T20:09:33Z'
   source_artifacts:
   - lakekeeper_mcp/ontology/lakekeeper.ttl
   integrity:
@@ -102,7 +102,7 @@ provenance:
   signature_algorithm: none
   signing_public_key: ''
   signature: null
-  source_commit: null
+  source_commit: c3a7e2328821ee837dd018ed64cedfdb7767cbff
 policy:
   pii_fields: {}
   tenant_boundary: null

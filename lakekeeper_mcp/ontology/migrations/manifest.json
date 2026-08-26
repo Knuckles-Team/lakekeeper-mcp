@@ -1,0 +1,6 @@
+{
+  "connector": "lakekeeper-mcp",
+  "current_ontology_source": "lakekeeper",
+  "migrations": [],
+  "schema_version": "1"
+}
