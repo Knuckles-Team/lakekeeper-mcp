@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "lakekeeper-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "lakekeeper-mcp"
+      ],
+      "env": {
+        "MCP_TOOL_MODE": "intent",
+        "LAKEKEEPER_URL": "http://lakekeeper.arpa",
+        "LAKEKEEPER_WAREHOUSE": "lakehouse",
+        "LAKEKEEPERTOOL": "True",
+        "LAKEKEEPER_SERVICE_CLIENT_ID": "lakekeeper-service",
+        "LAKEKEEPER_SERVICE_CLIENT_SECRET": "",
+        "LAKEKEEPER_OAUTH_SCOPE": "lakekeeper",
+        "LAKEKEEPER_KEYCLOAK_URL": "https://keycloak.arpa",
+        "LAKEKEEPER_KEYCLOAK_REALM": "homelab"
+      }
+    }
+  }
+}

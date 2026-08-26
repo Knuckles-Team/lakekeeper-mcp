@@ -1,0 +1,90 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Lakekeeper (Apache Iceberg REST catalog) ontology — models the catalog control plane
+# fronted by the lakekeeper-mcp tool surface: warehouses -> namespaces -> tables ->
+# snapshots/schema versions. This is the ONE live, reachable Iceberg-REST catalog on the
+# platform (eg's own Iceberg-REST surface is not reachable from other pods, per BASELINE
+# §1/§3 and CA-17); Trino and Spark both prove real reads through this exact path. All
+# classes/properties live in the SHARED `:` (kg#) namespace; only the owl:Ontology node
+# gets the per-package IRI. Backs the lakekeeper-mcp tool surface (lakekeeper_catalog /
+# lakekeeper_warehouse / lakekeeper_ownership / lakekeeper_maintenance / lakekeeper_events).
+
+# --- classes (owl:Class) ---
+
+:LakeWarehouse a owl:Class ;
+    rdfs:label "Lake Warehouse" ;
+    rdfs:comment "A Lakekeeper warehouse: one storage profile (bucket/prefix) plus its own auth/vending config (lakekeeper_warehouse list/get)." .
+
+:IcebergCatalog a owl:Class ;
+    rdfs:label "Iceberg Catalog" ;
+    rdfs:comment "The REST Iceberg catalog control plane rooted at one Lakekeeper deployment (lakekeeper_catalog config)." .
+
+:IcebergNamespace a owl:Class ;
+    rdfs:label "Iceberg Namespace" ;
+    rdfs:comment "A namespace (schema) within a warehouse's catalog, grouping tables (lakekeeper_catalog list_namespaces)." .
+
+:IcebergTable a owl:Class ;
+    rdfs:label "Iceberg Table" ;
+    rdfs:comment "An Iceberg table registered in a namespace, with its own metadata location and snapshot history (lakekeeper_catalog list_tables/get_table)." .
+
+:IcebergSnapshot a owl:Class ;
+    rdfs:label "Iceberg Snapshot" ;
+    rdfs:comment "One committed snapshot of an IcebergTable: a snapshot id, operation, and parent linkage (lakekeeper_catalog list_snapshots)." .
+
+:IcebergSchemaVersion a owl:Class ;
+    rdfs:label "Iceberg Schema Version" ;
+    rdfs:comment "One schema id in an IcebergTable's schema evolution history (lakekeeper_catalog get_table)." .
+
+# --- links (owl:ObjectProperty) ---
+
+:hasNamespace a owl:ObjectProperty ;
+    rdfs:label "has namespace" ;
+    rdfs:comment "Links an IcebergCatalog (within a LakeWarehouse) to an IcebergNamespace it lists." ;
+    rdfs:domain :IcebergCatalog ;
+    rdfs:range :IcebergNamespace .
+
+:hasTable a owl:ObjectProperty ;
+    rdfs:label "has table" ;
+    rdfs:comment "Links an IcebergNamespace to an IcebergTable registered under it." ;
+    rdfs:domain :IcebergNamespace ;
+    rdfs:range :IcebergTable .
+
+:hasSnapshot a owl:ObjectProperty ;
+    rdfs:label "has snapshot" ;
+    rdfs:comment "Links an IcebergTable to a committed IcebergSnapshot in its history." ;
+    rdfs:domain :IcebergTable ;
+    rdfs:range :IcebergSnapshot .
+
+:parentSnapshot a owl:ObjectProperty ;
+    rdfs:label "parent snapshot" ;
+    rdfs:comment "Links an IcebergSnapshot to the prior IcebergSnapshot it was committed on top of." ;
+    rdfs:domain :IcebergSnapshot ;
+    rdfs:range :IcebergSnapshot .
+
+:storedIn a owl:ObjectProperty ;
+    rdfs:label "stored in" ;
+    rdfs:comment "Links an IcebergTable to the LakeWarehouse whose storage profile holds its data files." ;
+    rdfs:domain :IcebergTable ;
+    rdfs:range :LakeWarehouse .
+
+:hasSchemaVersion a owl:ObjectProperty ;
+    rdfs:label "has schema version" ;
+    rdfs:comment "Links an IcebergTable to one IcebergSchemaVersion in its schema-evolution history." ;
+    rdfs:domain :IcebergTable ;
+    rdfs:range :IcebergSchemaVersion .
+
+<http://knuckles.team/kg/lakekeeper> a owl:Ontology ;
+    rdfs:label "Lakekeeper (Apache Iceberg REST Catalog) Ontology" ;
+    rdfs:comment """Lakekeeper Iceberg REST catalog topology — warehouses, catalogs,
+    namespaces, tables, snapshots, and schema versions — federated into the
+    agent-utilities knowledge-graph hub. This is the ONE live, reachable
+    Iceberg-REST catalog on the platform (Trino/Spark's sibling lanes both proved
+    real end-to-end reads through it; eg's own Iceberg-REST catalog is not
+    reachable from other pods).""" ;
+    owl:imports <http://knuckles.team/kg> .
