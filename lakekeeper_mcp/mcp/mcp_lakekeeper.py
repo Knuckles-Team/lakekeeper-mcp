@@ -81,7 +81,8 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
     @mcp.tool(tags={"catalog"})
     async def lakekeeper_config(
         warehouse: str = Field(
-            default="", description="Warehouse name (default from LAKEKEEPER_WAREHOUSE)."
+            default="",
+            description="Warehouse name (default from LAKEKEEPER_WAREHOUSE).",
         ),
     ) -> dict[str, Any]:
         """Iceberg REST catalog discovery/config for one warehouse."""
@@ -138,7 +139,9 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         """
         snapshots = get_client().fetch_snapshots(namespace, table, warehouse)
         current = None
-        metadata = get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+        metadata = (
+            get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+        )
         current = metadata.get("current-snapshot-id")
         return {
             "snapshots": snapshots,
@@ -167,7 +170,9 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(tags={"warehouse"})
     async def lakekeeper_get_warehouse(
-        warehouse_id: str = Field(description="Warehouse UUID (from lakekeeper_list_warehouses)."),
+        warehouse_id: str = Field(
+            description="Warehouse UUID (from lakekeeper_list_warehouses)."
+        ),
     ) -> dict[str, Any]:
         """Fetch one warehouse's full record, including its storage profile."""
         return get_client().fetch_warehouse(warehouse_id)
@@ -180,7 +185,9 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         warehouse: str = Field(default="", description="Warehouse name."),
     ) -> dict[str, Any]:
         """Read a table's ownership classification (engine vs. lakekeeper-native)."""
-        metadata = get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+        metadata = (
+            get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+        )
         return {
             "namespace": namespace,
             "table": table,

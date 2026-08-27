@@ -115,7 +115,9 @@ class _TokenCache:
                 f"Lakekeeper OAuth2 token was granted scope={granted_scope!r}, "
                 f"expected {self._scope!r} to be included"
             )
-        ttl = float(payload.get("expires_in", _DEFAULT_TOKEN_TTL_S) or _DEFAULT_TOKEN_TTL_S)
+        ttl = float(
+            payload.get("expires_in", _DEFAULT_TOKEN_TTL_S) or _DEFAULT_TOKEN_TTL_S
+        )
         self._token = token
         self._expires_at = now + ttl
 

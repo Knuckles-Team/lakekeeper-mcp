@@ -87,5 +87,8 @@ def test_map_schema_versions():
     schemas = [{"schema-id": 0, "fields": [{"id": 1, "name": "id", "type": "int"}]}]
     out = map_schema_versions("lakehouse", "analytics", "trino_verify", schemas)
     assert len(out) == 1
-    assert out[0]["id"] == "lakekeeper:IcebergSchemaVersion:lakehouse.analytics.trino_verify.0"
+    assert (
+        out[0]["id"]
+        == "lakekeeper:IcebergSchemaVersion:lakehouse.analytics.trino_verify.0"
+    )
     assert out[0]["fieldCount"] == 1

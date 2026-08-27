@@ -32,7 +32,9 @@ def test_reclassifying_away_from_native_is_rejected():
 
 
 def test_reclassifying_native_to_native_is_allowed():
-    _reject_if_reclassifying_native("lakekeeper-native", "lakekeeper-native")  # no raise
+    _reject_if_reclassifying_native(
+        "lakekeeper-native", "lakekeeper-native"
+    )  # no raise
 
 
 def test_classifying_unclassified_table_as_engine_is_rejected_by_the_safe_default():

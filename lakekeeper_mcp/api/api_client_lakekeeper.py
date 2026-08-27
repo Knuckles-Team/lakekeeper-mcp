@@ -80,12 +80,12 @@ class LakekeeperApi(ApiClientBase):
         return self._prefix_cache[wh]
 
     # ── catalog: namespaces ──────────────────────────────────────────────
-    def fetch_namespaces(self, warehouse: str = "", parent: str = "") -> list[list[str]]:
+    def fetch_namespaces(
+        self, warehouse: str = "", parent: str = ""
+    ) -> list[list[str]]:
         prefix = self._resolve_prefix(warehouse)
         params = {"parent": parent} if parent else None
-        result = self.request(
-            "GET", f"/catalog/v1/{prefix}/namespaces", params=params
-        )
+        result = self.request("GET", f"/catalog/v1/{prefix}/namespaces", params=params)
         return result.get("namespaces", [])
 
     def fetch_namespace(self, namespace: str, warehouse: str = "") -> dict[str, Any]:
@@ -134,9 +134,7 @@ class LakekeeperApi(ApiClientBase):
     # ── management: warehouses ───────────────────────────────────────────
     def fetch_warehouses(self, project_id: str = "") -> list[dict[str, Any]]:
         params = {"projectId": project_id} if project_id else None
-        result = self.request(
-            "GET", "/management/v1/warehouse", params=params
-        )
+        result = self.request("GET", "/management/v1/warehouse", params=params)
         return result.get("warehouses", [])
 
     def fetch_warehouse(self, warehouse_id: str) -> dict[str, Any]:

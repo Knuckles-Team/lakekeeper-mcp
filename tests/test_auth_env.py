@@ -50,7 +50,11 @@ def test_token_mint_sends_explicit_scope(monkeypatch):
         status_code = 200
 
         def json(self):
-            return {"access_token": "tok-123", "expires_in": 300, "scope": "lakekeeper profile"}
+            return {
+                "access_token": "tok-123",
+                "expires_in": 300,
+                "scope": "lakekeeper profile",
+            }
 
     def _fake_post(url, data=None, timeout=None, verify=None):
         captured["url"] = url
@@ -74,11 +78,13 @@ def test_token_mint_rejects_unexpected_granted_scope(monkeypatch):
         status_code = 200
 
         def json(self):
-            return {"access_token": "tok-123", "expires_in": 300, "scope": "catalog profile"}
+            return {
+                "access_token": "tok-123",
+                "expires_in": 300,
+                "scope": "catalog profile",
+            }
 
-    monkeypatch.setattr(
-        auth_module.requests, "post", lambda *a, **k: _FakeResponse()
-    )
+    monkeypatch.setattr(auth_module.requests, "post", lambda *_, **__: _FakeResponse())
 
     with pytest.raises(LakekeeperApiError, match="scope"):
         auth_module.get_token()
@@ -93,11 +99,13 @@ def test_token_cache_reuses_unexpired_token(monkeypatch):
 
         def json(self):
             calls["n"] += 1
-            return {"access_token": f"tok-{calls['n']}", "expires_in": 300, "scope": "lakekeeper"}
+            return {
+                "access_token": f"tok-{calls['n']}",
+                "expires_in": 300,
+                "scope": "lakekeeper",
+            }
 
-    monkeypatch.setattr(
-        auth_module.requests, "post", lambda *a, **k: _FakeResponse()
-    )
+    monkeypatch.setattr(auth_module.requests, "post", lambda *_, **__: _FakeResponse())
 
     first = auth_module.get_token()
     second = auth_module.get_token()

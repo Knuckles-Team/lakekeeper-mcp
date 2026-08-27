@@ -77,7 +77,9 @@ def _snapshot_id(warehouse: str, namespace: str, table: str, snapshot_id: Any) -
 
 
 def _schema_id(warehouse: str, namespace: str, table: str, schema_id: Any) -> str:
-    return f"lakekeeper:IcebergSchemaVersion:{warehouse}.{namespace}.{table}.{schema_id}"
+    return (
+        f"lakekeeper:IcebergSchemaVersion:{warehouse}.{namespace}.{table}.{schema_id}"
+    )
 
 
 def map_warehouse(warehouse_record: dict[str, Any]) -> dict[str, Any]:
@@ -283,7 +285,7 @@ def ingest_catalog(
         total_nodes += res.get("nodes", 0)
 
     if relationships:
-        # Re-declaring one already-written anchor entity (the catalog node)
+        # Redeclaring one already-written anchor entity (the catalog node)
         # alongside each relationship batch satisfies ingest_entities'
         # "at least one entity" precondition; native_ingest treats a
         # repeated entity id as idempotent, so this never double-counts.
@@ -311,7 +313,8 @@ def register_ingest_tools(mcp: FastMCP) -> None:
     )
     async def lakekeeper_ingest_catalog(
         warehouse: str = Field(
-            default="", description="Warehouse name (default from LAKEKEEPER_WAREHOUSE)."
+            default="",
+            description="Warehouse name (default from LAKEKEEPER_WAREHOUSE).",
         ),
         include_schemas: bool = Field(
             default=True,

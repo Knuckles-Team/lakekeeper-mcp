@@ -6,14 +6,18 @@ from pydantic import BaseModel, Field
 class NamespaceRef(BaseModel):
     """One Iceberg namespace within a warehouse."""
 
-    warehouse: str = Field(default="", description="Warehouse name (default from env if omitted).")
+    warehouse: str = Field(
+        default="", description="Warehouse name (default from env if omitted)."
+    )
     namespace: str = Field(description="Namespace name, e.g. 'analytics'.")
 
 
 class TableRef(BaseModel):
     """One Iceberg table within a namespace."""
 
-    warehouse: str = Field(default="", description="Warehouse name (default from env if omitted).")
+    warehouse: str = Field(
+        default="", description="Warehouse name (default from env if omitted)."
+    )
     namespace: str = Field(description="Namespace name, e.g. 'analytics'.")
     table: str = Field(description="Table name, e.g. 'trino_verify'.")
 

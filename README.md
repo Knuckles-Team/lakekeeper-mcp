@@ -113,6 +113,58 @@ authority.
 
 ## Environment Variables
 
+<!-- ENV-VARS-TABLE:START -->
+
+#### Package environment variables
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `LAKEKEEPER_URL` | `http://lakekeeper.arpa` |  |
+| `LAKEKEEPER_WAREHOUSE` | `lakehouse` |  |
+| `LAKEKEEPER_SERVICE_CLIENT_ID` | `lakekeeper-service` | scope is ALWAYS "lakekeeper" explicitly — the shared client default is "catalog", which Lakekeeper rejects (services/lakekeeper/AGENTS.md). |
+| `LAKEKEEPER_SERVICE_CLIENT_SECRET` | secret-injected |  |
+| `LAKEKEEPER_OAUTH_SCOPE` | `lakekeeper` |  |
+| `LAKEKEEPER_OAUTH_TOKEN_URL` | secret-injected | full token URL override; takes precedence |
+| `LAKEKEEPER_KEYCLOAK_URL` | `https://keycloak.arpa` | used to derive the token URL |
+| `LAKEKEEPER_KEYCLOAK_REALM` | `homelab` |  |
+| `LAKEKEEPER_TLS_PROFILE` | — |  |
+| `LAKEKEEPER_TLS_PROFILE_REF` | — |  |
+| `LAKEKEEPERTOOL` | `True` |  |
+| `INGESTTOOL` | `True` |  |
+
+#### Inherited agent-utilities variables (apply to every connector)
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `TRANSPORT` | `stdio` | MCP transport: `stdio` \| `streamable-http` \| `sse` |
+| `HOST` | `127.0.0.1` | Loopback bind host (set an authenticated ingress explicitly) |
+| `PORT` | `8000` | Bind port (HTTP transports) |
+| `MCP_TOOL_MODE` | `intent` | Tool surface: `intent` \| `condensed` \| `verbose` \| `both` |
+| `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
+| `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
+| `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
+| `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
+| `EUNOMIA_TYPE` | `none` | Authorization mode: `none` \| `embedded` \| `remote` |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` | Embedded Eunomia policy file |
+| `EUNOMIA_REMOTE_URL` | — | Remote Eunomia authorization server URL |
+| `ENABLE_OTEL` | `False` | Enable OpenTelemetry export |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | — | OTLP collector endpoint |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP child auth: `oidc-client-credentials` \| `basic` \| `none` |
+| `OIDC_CLIENT_ID` | — | OIDC client id (service-account auth) |
+| `OIDC_CLIENT_SECRET_REF` | `secret://identity/oidc-client-secret` | Runtime secret reference for the OIDC service account |
+| `MCP_BASIC_AUTH_USERNAME` | — | HTTP Basic username (`MCP_CLIENT_AUTH=basic`) |
+| `MCP_BASIC_AUTH_PASSWORD_REF` | `secret://identity/mcp-basic-password` | Runtime secret reference for HTTP Basic auth (`MCP_CLIENT_AUTH=basic`) |
+| `DEBUG` | `False` | Verbose logging |
+| `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
+| `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
+| `PROVIDER` | `openai` | LLM provider for the agent |
+| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
+
+_12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+<!-- ENV-VARS-TABLE:END -->
+
+
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `LAKEKEEPER_URL` | recommended | Bare Lakekeeper origin (e.g. `http://lakekeeper.arpa`) — never including `/catalog`. Defaults to `http://lakekeeper.arpa`. |
@@ -148,3 +200,53 @@ authority.
 See `docs/` for architecture, configuration, and deployment notes, and
 `AGENTS.md` for domain-specific traps (the `/catalog/v1` root, the
 `scope=lakekeeper` landmine, and the maintenance-delegation boundary).
+
+## Available MCP Tools
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `lakekeeper_cloudevents_status` | `LAKEKEEPERTOOL` | Report whether this Lakekeeper deployment has a CloudEvents sink configured. |
+| `lakekeeper_cloudevents_subscribe` | `LAKEKEEPERTOOL` | Named as a placeholder for CloudEvents subscription wiring (GOC-80-W04). |
+| `lakekeeper_config` | `LAKEKEEPERTOOL` | Iceberg REST catalog discovery/config for one warehouse. |
+| `lakekeeper_get_namespace` | `LAKEKEEPERTOOL` | Fetch one namespace's properties. |
+| `lakekeeper_get_ownership` | `LAKEKEEPERTOOL` | Read a table's ownership classification (engine vs. lakekeeper-native). |
+| `lakekeeper_get_table` | `LAKEKEEPERTOOL` | Full table load response (metadata, current schema, snapshots). |
+| `lakekeeper_get_warehouse` | `LAKEKEEPERTOOL` | Fetch one warehouse's full record, including its storage profile. |
+| `lakekeeper_ingest_catalog` | `INGESTTOOL` | Walk one warehouse's catalog and push it into the KG as typed OWL nodes. |
+| `lakekeeper_list_namespaces` | `LAKEKEEPERTOOL` | List namespaces in a warehouse's catalog. |
+| `lakekeeper_list_schema_versions` | `LAKEKEEPERTOOL` | List an Iceberg table's schema-evolution history (schema ids). |
+| `lakekeeper_list_snapshots` | `LAKEKEEPERTOOL` | List an Iceberg table's committed snapshots. |
+| `lakekeeper_list_tables` | `LAKEKEEPERTOOL` | List tables registered under one namespace. |
+| `lakekeeper_list_warehouses` | `LAKEKEEPERTOOL` | List Lakekeeper warehouses (Management API). |
+| `lakekeeper_maintenance_status` | `LAKEKEEPERTOOL` | Report a table's current snapshot count/age as maintenance-relevant signal. |
+| `lakekeeper_request_compaction` | `LAKEKEEPERTOOL` | Return the delegation instructions for compacting a table (never executes). |
+| `lakekeeper_request_expire_snapshots` | `LAKEKEEPERTOOL` | Return the delegation instructions for expiring old snapshots. |
+| `lakekeeper_set_engine_owned` | `LAKEKEEPERTOOL` | Classify a table's write authority — never overwrites an existing |
+
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>11 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `lakekeeper_fetch_namespace` | `LAKEKEEPER_APITOOL` | Invoke the fetch_namespace operation. |
+| `lakekeeper_fetch_namespaces` | `LAKEKEEPER_APITOOL` | Invoke the fetch_namespaces operation. |
+| `lakekeeper_fetch_schema_versions` | `LAKEKEEPER_APITOOL` | Invoke the fetch_schema_versions operation. |
+| `lakekeeper_fetch_snapshots` | `LAKEKEEPER_APITOOL` | Snapshot history for one table. |
+| `lakekeeper_fetch_table` | `LAKEKEEPER_APITOOL` | Full table load response, including ``metadata.snapshots`` and |
+| `lakekeeper_fetch_tables` | `LAKEKEEPER_APITOOL` | Invoke the fetch_tables operation. |
+| `lakekeeper_fetch_warehouse` | `LAKEKEEPER_APITOOL` | Invoke the fetch_warehouse operation. |
+| `lakekeeper_fetch_warehouses` | `LAKEKEEPER_APITOOL` | Invoke the fetch_warehouses operation. |
+| `lakekeeper_get_config` | `LAKEKEEPER_APITOOL` | Iceberg REST catalog discovery for one warehouse. |
+| `lakekeeper_get_server_info` | `LAKEKEEPER_APITOOL` | Invoke the get_server_info operation. |
+| `lakekeeper_get_warehouse_storage_profile` | `LAKEKEEPER_APITOOL` | Invoke the get_warehouse_storage_profile operation. |
+
+</details>
+
+_17 action-routed tool(s) · 11 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
