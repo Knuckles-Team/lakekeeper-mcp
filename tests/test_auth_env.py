@@ -31,7 +31,7 @@ def test_get_client_falls_back_to_default_url(monkeypatch):
 
     client = auth_module.get_client()
 
-    assert client.base_url.rstrip("/") == "http://lakekeeper.arpa"
+    assert client.base_url.rstrip("/") == "http://localhost:8181"
 
 
 def test_token_cache_requires_client_secret(monkeypatch):

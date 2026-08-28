@@ -11,10 +11,10 @@
         "INGESTTOOL": "True",
         "LAKEKEEPERTOOL": "True",
         "LAKEKEEPER_KEYCLOAK_REALM": "homelab",
-        "LAKEKEEPER_KEYCLOAK_URL": "https://keycloak.arpa",
+        "LAKEKEEPER_KEYCLOAK_URL": "http://localhost:8080",
         "LAKEKEEPER_OAUTH_SCOPE": "lakekeeper",
         "LAKEKEEPER_SERVICE_CLIENT_ID": "lakekeeper-service",
-        "LAKEKEEPER_URL": "http://lakekeeper.arpa",
+        "LAKEKEEPER_URL": "http://localhost:8181",
         "LAKEKEEPER_WAREHOUSE": "lakehouse"
       }
     }

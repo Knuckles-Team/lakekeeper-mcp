@@ -19,7 +19,7 @@ reads — those happen through Trino/Spark's own MCPs, never here (this
 package's explicit non-goal).
 
 Every method here has been proven against the live cluster catalog
-(``http://lakekeeper.arpa/catalog``, warehouse ``lakehouse``, namespace
+(``http://localhost:8181/catalog``, warehouse ``lakehouse``, namespace
 ``analytics``, table ``trino_verify`` — the exact table Trino/Spark's sibling
 lanes CA-52/CA-53 wrote and read) — see the package's own evidence file.
 """
@@ -36,7 +36,7 @@ __all__ = ["LakekeeperApi", "LakekeeperApiError"]
 class LakekeeperApi(ApiClientBase):
     """Authenticated Lakekeeper REST + Management API client.
 
-    ``base_url`` is the bare Lakekeeper origin (e.g. ``http://lakekeeper.arpa``,
+    ``base_url`` is the bare Lakekeeper origin (e.g. ``http://localhost:8181``,
     NOT including ``/catalog``) — this client appends ``/catalog/v1/...`` and
     ``/management/v1/...`` itself, matching the two distinct API roots
     Lakekeeper actually serves (confirmed live: ``/catalog/v1/config`` is the
