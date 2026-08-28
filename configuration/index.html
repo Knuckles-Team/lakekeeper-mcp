@@ -593,7 +593,7 @@ request and additionally verifies the <strong>granted</strong> scope includes it
 rejecting the token outright otherwise (fail closed, not a delayed 403 three
 calls later).</p>
 <h2 id="the-catalogv1-root">The <code>/catalog/v1</code> root<a class="headerlink" href="#the-catalogv1-root" title="Permanent link">&para;</a></h2>
-<p><code>LAKEKEEPER_URL</code> is the bare Lakekeeper origin (e.g. <code>http://lakekeeper.arpa</code>)
+<p><code>LAKEKEEPER_URL</code> is the bare Lakekeeper origin (e.g. <code>http://localhost:8181</code>)
 — <strong>never</strong> including <code>/catalog</code>. The client appends <code>/catalog/v1/...</code> (Iceberg
 REST) and <code>/management/v1/...</code> (Lakekeeper's own Management API) itself.
 Pointing this env var at <code>.../catalog</code> is the most common first-time
@@ -603,7 +603,7 @@ misconfiguration and presents as a confusing 404, not an auth error.</p>
 TLS trust policy (via <code>agent_utilities.core.transport_security</code>). The
 homelab's internal CA (<code>homelab-arpa-ca</code>) is trusted fleet-wide via the
 <code>homelab-ca-bundle</code> ConfigMap mount; Lakekeeper itself is served over plain
-HTTP at the ingress (<code>http://lakekeeper.arpa</code>) — only Keycloak enforces a
+HTTP at the ingress (<code>http://localhost:8181</code>) — only Keycloak enforces a
 TLS redirect.</p>
 
 
