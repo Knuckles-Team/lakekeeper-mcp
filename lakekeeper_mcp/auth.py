@@ -132,7 +132,7 @@ def _token_cache() -> _TokenCache:
         if _cache is not None:
             return _cache
         token_url = setting("LAKEKEEPER_OAUTH_TOKEN_URL", "") or (
-            setting("LAKEKEEPER_KEYCLOAK_URL", "https://keycloak.arpa").rstrip("/")
+            setting("LAKEKEEPER_KEYCLOAK_URL", "http://localhost:8080").rstrip("/")
             + f"/realms/{setting('LAKEKEEPER_KEYCLOAK_REALM', 'homelab')}"
             + "/protocol/openid-connect/token"
         )
@@ -174,7 +174,7 @@ def get_client() -> Api:
     the bearer token — minted fresh per client via :func:`get_token`, never a
     static baked-in ``LAKEKEEPER_TOKEN``.
     """
-    base_url = setting("LAKEKEEPER_URL", "http://lakekeeper.arpa")
+    base_url = setting("LAKEKEEPER_URL", "http://localhost:8181")
     default_warehouse = setting("LAKEKEEPER_WAREHOUSE", "")
     tls_profile = resolve_configured_tls_profile(
         "lakekeeper",

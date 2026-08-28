@@ -18,7 +18,7 @@ calls later).
 
 ## The `/catalog/v1` root
 
-`LAKEKEEPER_URL` is the bare Lakekeeper origin (e.g. `http://lakekeeper.arpa`)
+`LAKEKEEPER_URL` is the bare Lakekeeper origin (e.g. `http://localhost:8181`)
 — **never** including `/catalog`. The client appends `/catalog/v1/...` (Iceberg
 REST) and `/management/v1/...` (Lakekeeper's own Management API) itself.
 Pointing this env var at `.../catalog` is the most common first-time
@@ -30,5 +30,5 @@ misconfiguration and presents as a confusing 404, not an auth error.
 TLS trust policy (via `agent_utilities.core.transport_security`). The
 homelab's internal CA (`homelab-arpa-ca`) is trusted fleet-wide via the
 `homelab-ca-bundle` ConfigMap mount; Lakekeeper itself is served over plain
-HTTP at the ingress (`http://lakekeeper.arpa`) — only Keycloak enforces a
+HTTP at the ingress (`http://localhost:8181`) — only Keycloak enforces a
 TLS redirect.

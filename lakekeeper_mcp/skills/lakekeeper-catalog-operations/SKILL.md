@@ -49,11 +49,11 @@ Connect via the `mcp-client` skill against the **`lakekeeper-mcp`** MCP server.
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `LAKEKEEPER_URL` | ✅ | Bare Lakekeeper origin, e.g. `http://lakekeeper.arpa` (never including `/catalog`) |
+| `LAKEKEEPER_URL` | ✅ | Bare Lakekeeper origin, e.g. `http://localhost:8181` (never including `/catalog`) |
 | `LAKEKEEPER_WAREHOUSE` | recommended | Default warehouse name (e.g. `lakehouse`); every tool also accepts an explicit `warehouse` param |
 | `LAKEKEEPER_SERVICE_CLIENT_ID` / `LAKEKEEPER_SERVICE_CLIENT_SECRET` | ✅ | Keycloak client-credentials |
 | `LAKEKEEPER_OAUTH_SCOPE` | optional | Defaults to `lakekeeper` — never leave this at the shared-client default `catalog` |
-| `LAKEKEEPER_KEYCLOAK_URL` / `LAKEKEEPER_KEYCLOAK_REALM` | optional | Defaults to `https://keycloak.arpa` / `homelab` |
+| `LAKEKEEPER_KEYCLOAK_URL` / `LAKEKEEPER_KEYCLOAK_REALM` | optional | Defaults to `http://localhost:8080` / `homelab` |
 
 ## Tools
 

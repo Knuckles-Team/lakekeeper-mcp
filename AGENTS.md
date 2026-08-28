@@ -25,7 +25,7 @@
 
 ## Domain notes (read before touching `auth.py` or `api_client_lakekeeper.py`)
 - Lakekeeper's Iceberg REST surface is rooted at `/catalog/v1`, **not** `/v1` —
-  `base_url` is the bare origin (`http://lakekeeper.arpa`), never including
+  `base_url` is the bare origin (`http://localhost:8181`), never including
   `/catalog`; the client appends both `/catalog/v1/...` and `/management/v1/...`
   itself.
 - Every OAuth2 token request MUST pass `scope=lakekeeper` explicitly. The

@@ -1,9 +1,32 @@
-# lakekeeper-mcp
+# Lakekeeper Mcp
+## CLI or API | MCP | Agent
 
-A Model Context Protocol (MCP) server, A2A agent, and API client for Lakekeeper
-(Apache Iceberg REST catalog) integration.
-
+![PyPI - Version](https://img.shields.io/pypi/v/lakekeeper-mcp)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
+![PyPI - Downloads](https://img.shields.io/pypi/dd/lakekeeper-mcp)
+![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/lakekeeper-mcp)
+![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/lakekeeper-mcp)
+![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/lakekeeper-mcp)
+![PyPI - License](https://img.shields.io/pypi/l/lakekeeper-mcp)
+![GitHub](https://img.shields.io/github/license/Knuckles-Team/lakekeeper-mcp)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/lakekeeper-mcp)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/lakekeeper-mcp)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/lakekeeper-mcp)
+![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/lakekeeper-mcp)
+![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/lakekeeper-mcp)
+![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/lakekeeper-mcp)
+![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/lakekeeper-mcp)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/lakekeeper-mcp)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/lakekeeper-mcp)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/lakekeeper-mcp)
+
+*Version: 0.1.0*
+
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/lakekeeper-mcp/).
+
+---
 
 ## Table of Contents
 - [Overview](#overview)
@@ -71,13 +94,13 @@ python -m lakekeeper_mcp
       "args": ["run", "lakekeeper-mcp"],
       "env": {
         "MCP_TOOL_MODE": "intent",
-        "LAKEKEEPER_URL": "http://lakekeeper.arpa",
+        "LAKEKEEPER_URL": "http://localhost:8181",
         "LAKEKEEPER_WAREHOUSE": "lakehouse",
         "LAKEKEEPERTOOL": "True",
         "LAKEKEEPER_SERVICE_CLIENT_ID": "lakekeeper-service",
         "LAKEKEEPER_SERVICE_CLIENT_SECRET": "",
         "LAKEKEEPER_OAUTH_SCOPE": "lakekeeper",
-        "LAKEKEEPER_KEYCLOAK_URL": "https://keycloak.arpa",
+        "LAKEKEEPER_KEYCLOAK_URL": "http://localhost:8080",
         "LAKEKEEPER_KEYCLOAK_REALM": "homelab"
       }
     }
@@ -119,13 +142,13 @@ authority.
 
 | Variable | Example | Description |
 |----------|---------|-------------|
-| `LAKEKEEPER_URL` | `http://lakekeeper.arpa` |  |
+| `LAKEKEEPER_URL` | `http://localhost:8181` |  |
 | `LAKEKEEPER_WAREHOUSE` | `lakehouse` |  |
 | `LAKEKEEPER_SERVICE_CLIENT_ID` | `lakekeeper-service` | scope is ALWAYS "lakekeeper" explicitly — the shared client default is "catalog", which Lakekeeper rejects (services/lakekeeper/AGENTS.md). |
 | `LAKEKEEPER_SERVICE_CLIENT_SECRET` | secret-injected |  |
 | `LAKEKEEPER_OAUTH_SCOPE` | `lakekeeper` |  |
 | `LAKEKEEPER_OAUTH_TOKEN_URL` | secret-injected | full token URL override; takes precedence |
-| `LAKEKEEPER_KEYCLOAK_URL` | `https://keycloak.arpa` | used to derive the token URL |
+| `LAKEKEEPER_KEYCLOAK_URL` | `http://localhost:8080` | used to derive the token URL |
 | `LAKEKEEPER_KEYCLOAK_REALM` | `homelab` |  |
 | `LAKEKEEPER_TLS_PROFILE` | — |  |
 | `LAKEKEEPER_TLS_PROFILE_REF` | — |  |
@@ -167,13 +190,13 @@ _12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `LAKEKEEPER_URL` | recommended | Bare Lakekeeper origin (e.g. `http://lakekeeper.arpa`) — never including `/catalog`. Defaults to `http://lakekeeper.arpa`. |
+| `LAKEKEEPER_URL` | recommended | Bare Lakekeeper origin (e.g. `http://localhost:8181`) — never including `/catalog`. Defaults to `http://localhost:8181`. |
 | `LAKEKEEPER_WAREHOUSE` | recommended | Default warehouse name; every tool also accepts an explicit `warehouse` param. |
 | `LAKEKEEPER_SERVICE_CLIENT_ID` | ✅ | Keycloak client-credentials client id. Defaults to `lakekeeper-service`. |
 | `LAKEKEEPER_SERVICE_CLIENT_SECRET` | ✅ | Keycloak client-credentials secret. |
 | `LAKEKEEPER_OAUTH_SCOPE` | optional | Defaults to `lakekeeper` — never leave at the shared-client default `catalog`. |
 | `LAKEKEEPER_OAUTH_TOKEN_URL` | optional | Full token URL override; takes precedence over the Keycloak URL/realm derivation. |
-| `LAKEKEEPER_KEYCLOAK_URL` | optional | Defaults to `https://keycloak.arpa`. |
+| `LAKEKEEPER_KEYCLOAK_URL` | optional | Defaults to `http://localhost:8080`. |
 | `LAKEKEEPER_KEYCLOAK_REALM` | optional | Defaults to `homelab`. |
 | `LAKEKEEPER_TLS_PROFILE` / `LAKEKEEPER_TLS_PROFILE_REF` | optional | Named outbound TLS trust policy. |
 | `LAKEKEEPERTOOL` | optional | Tool-group toggle (set `False` to disable the catalog/warehouse/ownership/maintenance/events tools). Default `True`. |
@@ -250,3 +273,61 @@ See `docs/` for architecture, configuration, and deployment notes, and
 
 _17 action-routed tool(s) · 11 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
+
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
+
+Contributions are welcome! Please ensure code quality by executing local checks before submitting pull requests:
+- Format code using `ruff format .`
+- Lint code using `ruff check .`
+- Validate type-safety with `mypy .`
+- Execute test suites using `pytest`
+
+
+<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
+
+## Deploy with `agent-utilities-deployment`
+
+Provision this package with the consolidated **`agent-utilities-deployment`**
+workflow. It selects an installed-package, editable-source, or immutable-container
+path; records only runtime secret and TLS-profile references in `AgentConfig`; and
+runs doctor, registration, policy, observability, and rollback gates. Ask your agent
+to **"deploy `lakekeeper-mcp` with agent-utilities-deployment"**.
+
+| Install mode | Command |
+|------|---------|
+| Installed package | `uv tool install "lakekeeper-mcp[mcp]"`, then run `lakekeeper-mcp` |
+| Editable source | `uv pip install -e ".[agent]"`, then run `lakekeeper-mcp` |
+| Immutable container | deploy `registry.example.invalid/lakekeeper-mcp@sha256:<digest>` through the operator-selected orchestrator |
+
+The repository embeds no deployment profile, credential value, certificate path, or
+environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
+configured secret provider.
+
+<!-- END agent-utilities-deployment -->
+
+<!-- GOVERNED-CAPABILITY:START -->
+## Governed capability contract
+
+This package ships a compact canonical skill surface with specialist procedures
+kept as referenced workflows. The current MCP tools, skill metadata,
+`connector_manifest.yml`, ontology, mappings, shapes, fixtures, migrations,
+tool-schema fingerprints, and certification metadata form one versioned
+capability contract. Validate them together; do not rely on stale tool names or
+historical per-task skill wrappers.
+
+Runtime endpoints, credentials, certificate trust, tenant identity, retention,
+and observability policy are deployment inputs and are never packaged values.
+See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
+network transport, connector ingestion, GraphOS delegation, or trace export.
+<!-- GOVERNED-CAPABILITY:END -->
