@@ -160,7 +160,16 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         return {"schemas": schemas, "count": len(schemas)}
 
     # ── warehouse (read-only) ────────────────────────────────────────────
-    @mcp.tool(tags={"warehouse"})
+    @mcp.tool(
+        annotations={
+            "title": "List Lakekeeper Warehouses",
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": True,
+        },
+        tags={"warehouse"},
+    )
     async def lakekeeper_list_warehouses(
         project_id: str = Field(default="", description="Optional project id filter."),
     ) -> dict[str, Any]:
