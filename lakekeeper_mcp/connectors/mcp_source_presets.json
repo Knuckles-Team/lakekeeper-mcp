@@ -1,0 +1,13 @@
+{
+  "_comment": "Tier-1 mcp_tool source preset for lakekeeper-mcp (AU-KG.ingest.mcp-tool-connector). Syncs the Lakekeeper warehouse inventory into the KG via the lakekeeper-mcp MCP server. lakekeeper_list_warehouses takes no required arguments (project_id is an optional filter, default empty = all projects) and returns a flat {warehouses: [...], count} envelope -- the only lakekeeper_* tool with zero required parameters, so the only one a scheduled sweep can call unattended. Namespaces/tables/snapshots/schema-versions each require a parent namespace/table name the sync pipeline has no way to supply on its own; those stay reachable only through direct tool calls, not this preset. Contributed presets win over the central MCP_TOOL_PRESETS.",
+  "lakekeeper-warehouses": {
+    "server": "lakekeeper-mcp",
+    "tool": "lakekeeper_list_warehouses",
+    "params_style": "args",
+    "records_path": "warehouses",
+    "id_field": "id",
+    "title_field": "name",
+    "text_field": "status",
+    "doc_type": "lakekeeper_warehouse"
+  }
+}

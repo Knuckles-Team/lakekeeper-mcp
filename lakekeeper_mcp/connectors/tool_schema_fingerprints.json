@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
+  "connector": "lakekeeper-mcp",
+  "schema_version": "1",
+  "tools": {
+    "lakekeeper_list_warehouses": "b34815ee15795baf3cc48c3eef8c638dca121020d298e7b67f61c6c668ed4164"
+  }
+}

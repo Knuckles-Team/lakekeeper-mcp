@@ -88,7 +88,11 @@ schema_mappings:
   LakeWarehouse:
     ontology_class: null
     fields: {}
-sync: []
+sync:
+- preset: lakekeeper-warehouses
+  server: lakekeeper-mcp
+  tool: lakekeeper_list_warehouses
+  tool_schema_sha256: b34815ee15795baf3cc48c3eef8c638dca121020d298e7b67f61c6c668ed4164
 provenance:
   generated_by: scripts/generate_connector_manifests.py
   generated_at: '2026-08-26T20:09:33Z'
