@@ -62,20 +62,18 @@ Pick the extra that matches what you want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `lakekeeper-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated A2A agent** |
 | `lakekeeper-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
 uv pip install "lakekeeper-mcp[mcp]"
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container image
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds a single, right-sized image:
 
 ```bash
 docker build --target mcp   -t lakekeeper-mcp:mcp    .
-docker build --target agent -t lakekeeper-mcp:agent   .
 ```
 
 ## Usage
@@ -187,7 +185,6 @@ authority.
 _12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
-
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `LAKEKEEPER_URL` | recommended | Bare Lakekeeper origin (e.g. `http://localhost:8181`) — never including `/catalog`. Defaults to `http://localhost:8181`. |
@@ -293,7 +290,6 @@ Contributions are welcome! Please ensure code quality by executing local checks 
 - Validate type-safety with `mypy .`
 - Execute test suites using `pytest`
 
-
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
 
 ## Deploy with `agent-utilities-deployment`
@@ -307,7 +303,7 @@ to **"deploy `lakekeeper-mcp` with agent-utilities-deployment"**.
 | Install mode | Command |
 |------|---------|
 | Installed package | `uv tool install "lakekeeper-mcp[mcp]"`, then run `lakekeeper-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `lakekeeper-mcp` |
+| Editable source | `uv pip install -e ".[mcp]"`, then run `lakekeeper-mcp` |
 | Immutable container | deploy `registry.example.invalid/lakekeeper-mcp@sha256:<digest>` through the operator-selected orchestrator |
 
 The repository embeds no deployment profile, credential value, certificate path, or
