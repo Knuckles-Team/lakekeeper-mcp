@@ -23,9 +23,9 @@ import time
 from typing import Any
 
 import requests
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.transport_security import resolve_configured_tls_profile
+from agent_connector_sdk.utilities import get_logger
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 from lakekeeper_mcp.api.api_client_base import LakekeeperApiError
 from lakekeeper_mcp.api_client import Api
@@ -143,7 +143,7 @@ def _token_cache() -> _TokenCache:
                 "LAKEKEEPER_SERVICE_CLIENT_SECRET is not configured — cannot mint a "
                 "Lakekeeper OAuth2 token"
             )
-        tls_profile = resolve_configured_tls_profile(
+        tls_profile = resolve_tls_profile(
             "lakekeeper",
             profile_name=setting("LAKEKEEPER_TLS_PROFILE", None),
             profile_ref=setting("LAKEKEEPER_TLS_PROFILE_REF", None),
@@ -176,7 +176,7 @@ def get_client() -> Api:
     """
     base_url = setting("LAKEKEEPER_URL", "http://localhost:8181")
     default_warehouse = setting("LAKEKEEPER_WAREHOUSE", "")
-    tls_profile = resolve_configured_tls_profile(
+    tls_profile = resolve_tls_profile(
         "lakekeeper",
         profile_name=setting("LAKEKEEPER_TLS_PROFILE", None),
         profile_ref=setting("LAKEKEEPER_TLS_PROFILE_REF", None),

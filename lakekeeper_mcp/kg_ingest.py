@@ -22,11 +22,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
-)
-from fastmcp import FastMCP
-from pydantic import Field
 
 from lakekeeper_mcp.auth import get_client
 
@@ -37,22 +32,12 @@ _DOMAIN = "lakekeeper"
 _BATCH_SIZE = 500
 
 
-def ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int]:
-    """Write canonical typed nodes and relationships through native ingestion."""
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=_SOURCE,
-        domain=_DOMAIN,
-        client=client,
-        graph=graph,
-    )
+def ingest_entities(*args: object, **kwargs: object) -> object:
+    """Write canonical typed nodes and relationships through native ingestion.
+
+    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
+    """
+    _kg_unavailable("ingest_entities")
 
 
 # ── record → entity/relationship mappers ─────────────────────────────────────
@@ -298,37 +283,29 @@ def ingest_catalog(
     return {"nodes": total_nodes, "edges": total_edges, "warehouse": warehouse}
 
 
-def register_ingest_tools(mcp: FastMCP) -> None:
-    """Register the Wire-First KG catalog ingest tool."""
+def register_ingest_tools(*args: object, **kwargs: object) -> object:
+    """Register the Wire-First KG catalog ingest tool.
 
-    @mcp.tool(
-        annotations={
-            "title": "Ingest Lakekeeper Catalog Into KG",
-            "readOnlyHint": False,
-            "destructiveHint": False,
-            "idempotentHint": True,
-            "openWorldHint": True,
-        },
-        tags={"ingest", "mutating"},
+    SDK-GAP: No-op: nothing left to register/write; preserves the graceful-degradation contract.
+    """
+    return None
+
+
+class KnowledgeGraphIngestUnavailable(RuntimeError):
+    """Direct-to-graph ingestion is unavailable from this connector.
+
+    SDK-GAP (EH-48x, /var/tmp/l9/finish/au-decon-G4c/SDK-GAPS.md): raised in
+    place of the old ``agent_utilities.knowledge_graph`` native-ingest call --
+    agent-connector-sdk has no facade over EG's typed ingestion protocol yet,
+    and the fleet precedent (agents/world-reference-mcp) moves direct-to-graph
+    delivery to agent_connector_sdk.runner/sinks at the deployment layer, out
+    of connector scope.
+    """
+
+
+def _kg_unavailable(name: str) -> None:
+    raise KnowledgeGraphIngestUnavailable(
+        f"{name}: direct-to-graph ingestion moved out of connector code "
+        "(agent-utilities removed); no agent-connector-sdk facade exists yet "
+        "-- see SDK-GAPS.md"
     )
-    async def lakekeeper_ingest_catalog(
-        warehouse: str = Field(
-            default="",
-            description="Warehouse name (default from LAKEKEEPER_WAREHOUSE).",
-        ),
-        include_schemas: bool = Field(
-            default=True,
-            description="Also ingest per-table schema-version history (IcebergSchemaVersion).",
-        ),
-    ) -> dict[str, int]:
-        """Walk one warehouse's catalog and push it into the KG as typed OWL nodes.
-
-        Produces ``:IcebergCatalog`` -> ``:IcebergNamespace`` -> ``:IcebergTable``
-        -> ``:IcebergSnapshot``/``:IcebergSchemaVersion`` chains, plus
-        ``:LakeWarehouse``/``storedIn`` linkage. Never partially commits.
-        """
-        from agent_utilities.core.config import setting
-
-        wh = warehouse or setting("LAKEKEEPER_WAREHOUSE", "")
-        result = ingest_catalog(wh, include_schemas=include_schemas)
-        return result
