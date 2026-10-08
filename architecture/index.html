@@ -656,7 +656,7 @@ Two facts changed that:</p>
    (those happen through Trino/Spark's own MCPs — an explicit non-goal here).</li>
 </ol>
 <p><code>api_client_lakekeeper.py</code> implements the exact REST calls a <code>pyiceberg</code>
-client would make (<code>GET /catalog/v1/config</code> for prefix discovery, <code>GET/POST</code>
+client will make (<code>GET /catalog/v1/config</code> for prefix discovery, <code>GET/POST</code>
 against <code>namespaces</code>/<code>tables</code>, <code>POST</code> against <code>namespaces/{ns}/tables/{t}</code>
 for the standard <code>UpdateTableRequest</code> shape used by <code>lakekeeper_set_engine_owned</code>)
 directly over <code>requests</code>, proven live against the deployed cluster.</p>

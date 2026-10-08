@@ -586,10 +586,10 @@ for the full, authoritative list — the code (<code>auth.py</code>, <code>mcp/m
 <code>python -m agent_utilities.mcp.check_env_var_drift --check</code>).</p>
 <h2 id="the-scopelakekeeper-landmine">The <code>scope=lakekeeper</code> landmine<a class="headerlink" href="#the-scopelakekeeper-landmine" title="Permanent link">&para;</a></h2>
 <p>Lakekeeper's Keycloak client (<code>lakekeeper-service</code>) is provisioned for
-<code>scope=lakekeeper</code>. The shared Iceberg-REST/OAuth2 client convention many SDKs
+<code>scope=lakekeeper</code>. The shared Iceberg-REST/OAuth2 client convention multiple SDKs
 default to is <code>scope=catalog</code> — a token minted with that default is silently
 rejected. <code>auth.py</code> passes <code>scope=lakekeeper</code> explicitly on every token
-request and additionally verifies the <strong>granted</strong> scope includes it,
+request and also checks the <strong>granted</strong> scope includes it,
 rejecting the token outright otherwise (fail closed, not a delayed 403 three
 calls later).</p>
 <h2 id="the-catalogv1-root">The <code>/catalog/v1</code> root<a class="headerlink" href="#the-catalogv1-root" title="Permanent link">&para;</a></h2>
