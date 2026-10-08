@@ -35,7 +35,7 @@ Two facts changed that:
    (those happen through Trino/Spark's own MCPs — an explicit non-goal here).
 
 `api_client_lakekeeper.py` implements the exact REST calls a `pyiceberg`
-client would make (`GET /catalog/v1/config` for prefix discovery, `GET/POST`
+client will make (`GET /catalog/v1/config` for prefix discovery, `GET/POST`
 against `namespaces`/`tables`, `POST` against `namespaces/{ns}/tables/{t}`
 for the standard `UpdateTableRequest` shape used by `lakekeeper_set_engine_owned`)
 directly over `requests`, proven live against the deployed cluster.

@@ -116,12 +116,12 @@ config, docs, lockfiles). The only hidden directories allowed at root are
 `~/workspace/reports/` (command output); tests go in `tests/` (pytest).
 Before finishing a task, run `git status` and confirm no stray root files were added.
 
-## Working Discipline — think, simplify, stay surgical, verify
+## Working Discipline — think, simplify, stay surgical, check
 - **Think before coding.** State assumptions explicitly; surface options rather
   than silently picking one.
 - **Simplicity first.** Minimum code that solves the stated problem.
 - **Stay surgical.** Every changed line traces to the task.
-- **Verify against a goal.** Prove behavior with a real test or a real call
+- **Check against a goal.** Prove behavior with a real test or a real call
   against the live Lakekeeper deployment, not a mock alone.
 
 ## Quality Bar — Leave the Codebase Clean (REQUIRED)

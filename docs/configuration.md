@@ -9,10 +9,10 @@ for the full, authoritative list — the code (`auth.py`, `mcp/mcp_lakekeeper.py
 ## The `scope=lakekeeper` landmine
 
 Lakekeeper's Keycloak client (`lakekeeper-service`) is provisioned for
-`scope=lakekeeper`. The shared Iceberg-REST/OAuth2 client convention many SDKs
+`scope=lakekeeper`. The shared Iceberg-REST/OAuth2 client convention multiple SDKs
 default to is `scope=catalog` — a token minted with that default is silently
 rejected. `auth.py` passes `scope=lakekeeper` explicitly on every token
-request and additionally verifies the **granted** scope includes it,
+request and also checks the **granted** scope includes it,
 rejecting the token outright otherwise (fail closed, not a delayed 403 three
 calls later).
 
