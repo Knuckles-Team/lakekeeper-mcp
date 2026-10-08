@@ -57,12 +57,12 @@ dependency (see [Architecture](#architecture) for why).
 
 ## Installation
 
-Pick the extra that matches what you want to run:
+Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `lakekeeper-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated A2A agent** |
+| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `lakekeeper-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated A2A agent** |
 | `lakekeeper-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -215,7 +215,7 @@ _12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the
 | `lakekeeper_list_warehouses` / `lakekeeper_get_warehouse` | warehouse | Warehouse admin (Management API) |
 | `lakekeeper_get_ownership` / `lakekeeper_set_engine_owned` | ownership | Read/classify write authority |
 | `lakekeeper_maintenance_status` | maintenance | Read-only snapshot-count/age signal |
-| `lakekeeper_request_expire_snapshots` / `lakekeeper_request_compaction` | maintenance | Name a delegation target; never executes |
+| `lakekeeper_request_expire_snapshots` / `lakekeeper_request_compaction` | maintenance | Name a delegation target; never runs |
 | `lakekeeper_cloudevents_status` / `lakekeeper_cloudevents_subscribe` | events | CloudEvents sink status |
 | `lakekeeper_ingest_catalog` | ingest | Wire-First KG catalog ingest |
 
@@ -287,11 +287,11 @@ _17 action-routed tool(s) · 11 verbose 1:1 tool(s). Each is enabled unless its 
 
 ## Contribute
 
-Contributions are welcome! Please ensure code quality by executing local checks before submitting pull requests:
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
 - Format code using `ruff format .`
 - Lint code using `ruff check .`
 - Validate type-safety with `mypy .`
-- Execute test suites using `pytest`
+- Run test suites using `pytest`
 
 
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
