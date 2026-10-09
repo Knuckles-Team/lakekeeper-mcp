@@ -10,11 +10,11 @@ nodes (``:LakeWarehouse``, ``:IcebergCatalog``, ``:IcebergNamespace``,
 ``hasNamespace``/``hasTable``/``hasSnapshot``/``parentSnapshot``/``storedIn``/
 ``hasSchemaVersion`` relations.
 
-The txn write path is the required
-``agent_utilities.knowledge_graph.memory.native_ingest`` authority. Node ids
-follow ``lakekeeper:<class>:<externalId>``; ``node_type`` on each entity
-matches a class federated by ``lakekeeper_mcp.ontology`` (``lakekeeper.ttl``).
-Batches at ≤500 entities per ``ingest_entities`` call (egeria-mcp's convention).
+The txn write path is ``agent_connector_sdk.ingest``'s generated SourceIngest
+client, not a local ingestion helper. Node ids follow
+``lakekeeper:<class>:<externalId>``; ``node_type`` on each entity matches a
+class federated by ``lakekeeper_mcp.ontology`` (``lakekeeper.ttl``). Batches at
+≤500 entities per ``ingest_entities`` call (egeria-mcp's convention).
 """
 
 from __future__ import annotations
@@ -22,8 +22,14 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Entity,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
 from fastmcp import FastMCP
 from pydantic import Field
@@ -32,27 +38,57 @@ from lakekeeper_mcp.auth import get_client
 
 logger = logging.getLogger("lakekeeper_mcp.kg")
 
-_SOURCE = "lakekeeper-mcp"
-_DOMAIN = "lakekeeper"
+_BINDING = IngestBinding(connector="lakekeeper-mcp", stream="lakekeeper")
 _BATCH_SIZE = 500
 
+_ENTITY_RESERVED_KEYS = frozenset({"id", "node_type"})
+_RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})
 
-def ingest_entities(
+
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record.get("id"),
+        node_type=record.get("node_type"),
+        properties={
+            key: value
+            for key, value in record.items()
+            if key not in _ENTITY_RESERVED_KEYS
+        },
+    )
+
+
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    properties = {
+        key: value
+        for key, value in record.items()
+        if key not in _RELATIONSHIP_RESERVED_KEYS
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=properties or None,
+    )
+
+
+async def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write canonical typed nodes and relationships through native ingestion."""
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=_SOURCE,
-        domain=_DOMAIN,
-        client=client,
-        graph=graph,
+    """Write canonical typed nodes and relationships through the SDK ingest facade."""
+    if not entities:
+        raise IngestError("ingest_entities needs at least one entity")
+    change_set = ChangeSet(
+        entities=tuple(_to_entity(entity) for entity in entities),
+        relationships=tuple(
+            _to_relationship(relationship) for relationship in relationships or ()
+        ),
     )
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 # ── record → entity/relationship mappers ─────────────────────────────────────
@@ -189,11 +225,10 @@ def map_schema_versions(
 
 
 # ── high-level ingest entry point (Wire-First + default-on) ──────────────────
-def ingest_catalog(
+async def ingest_catalog(
     warehouse: str,
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
     include_schemas: bool = True,
 ) -> dict[str, int]:
     """Walk one warehouse's full catalog and push it into the KG (typed + linked).
@@ -201,8 +236,8 @@ def ingest_catalog(
     Call sequence: list namespaces -> list tables per namespace -> get_table
     (snapshots + schemas) per table -> build entity/relationship batch ->
     ``ingest_entities`` in batches of ``_BATCH_SIZE``. Never partially commits:
-    ``native_ingest.ingest_entities`` raises ``NativeIngestError`` rather than
-    silently acking a partial batch.
+    the SDK ingest facade raises ``IngestError`` rather than silently acking a
+    partial batch.
     """
     api = get_client()
 
@@ -281,18 +316,18 @@ def ingest_catalog(
     total_edges = 0
     for start in range(0, len(entities), _BATCH_SIZE):
         batch = entities[start : start + _BATCH_SIZE]
-        res = ingest_entities(batch, None, client=client, graph=graph)
+        res = await ingest_entities(batch, None, ingest=ingest)
         total_nodes += res.get("nodes", 0)
 
     if relationships:
         # Redeclaring one already-written anchor entity (the catalog node)
         # alongside each relationship batch satisfies ingest_entities'
-        # "at least one entity" precondition; native_ingest treats a
+        # "at least one entity" precondition; the SDK facade treats a
         # repeated entity id as idempotent, so this never double-counts.
         anchor = entities[0]
         for start in range(0, len(relationships), _BATCH_SIZE):
             batch = relationships[start : start + _BATCH_SIZE]
-            res = ingest_entities([anchor], batch, client=client, graph=graph)
+            res = await ingest_entities([anchor], batch, ingest=ingest)
             total_edges += res.get("edges", 0)
 
     return {"nodes": total_nodes, "edges": total_edges, "warehouse": warehouse}
@@ -327,8 +362,8 @@ def register_ingest_tools(mcp: FastMCP) -> None:
         -> ``:IcebergSnapshot``/``:IcebergSchemaVersion`` chains, plus
         ``:LakeWarehouse``/``storedIn`` linkage. Never partially commits.
         """
-        from agent_utilities.core.config import setting
+        from agent_connector_sdk.config import setting
 
         wh = warehouse or setting("LAKEKEEPER_WAREHOUSE", "")
-        result = ingest_catalog(wh, include_schemas=include_schemas)
+        result = await ingest_catalog(wh, include_schemas=include_schemas)
         return result
