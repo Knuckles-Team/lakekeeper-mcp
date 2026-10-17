@@ -1,5 +1,5 @@
 {
-  "api_version": "graphos.io/v1",
+  "api_version": "arbora.io/v1",
   "artifacts": {
     "connector_manifest.yml": "5a379f4e340c7870d645d575282ab305dc1b411795d16750918e5c44dede5ad0",
     "lakekeeper_mcp/ontology/fixtures/records.json": "2a3d8d68bec9d4488d4225b3cb4b0fc41f4b5409b412066b86a70393ae8aec8d",
