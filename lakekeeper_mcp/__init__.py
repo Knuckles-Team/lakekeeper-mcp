@@ -9,7 +9,6 @@ __all__: list[str] = []
 
 CORE_MODULES = ["lakekeeper_mcp.api_client"]
 OPTIONAL_MODULES = {
-    "lakekeeper_mcp.agent_server": "agent",
     "lakekeeper_mcp.mcp_server": "mcp",
 }
 
