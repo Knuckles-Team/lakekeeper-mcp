@@ -2,23 +2,6 @@
 
 ## Layers
 
-```
-lakekeeper_mcp/
-  api/
-    api_client_base.py       # thin requests.Session wrapper, fail-closed
-    api_client_lakekeeper.py # LakekeeperApi: /catalog/v1 + /management/v1
-  api_client.py               # public Api facade
-  auth.py                      # OAuth2 client-credentials, scope=lakekeeper, token cache
-  models.py                    # Pydantic request/response shapes
-  mcp/
-    mcp_lakekeeper.py         # catalog/warehouse/ownership/maintenance/events tools
-  kg_ingest.py                 # native_ingest mapping + lakekeeper_ingest_catalog tool
-  mcp_server.py                 # FastMCP server assembly (register_tool_surface)
-  agent_server.py               # Pydantic-AI A2A agent entry point
-  ontology/lakekeeper.ttl        # federated OWL classes/links
-  connector_manifest.yml         # resources/actions/sync declaration (DEC-CA-08)
-```
-
 ## Why a direct REST client, not `pyiceberg`
 
 Lakekeeper's REST surface is the standard Iceberg REST Catalog spec
