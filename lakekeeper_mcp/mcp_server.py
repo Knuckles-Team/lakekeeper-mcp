@@ -15,7 +15,7 @@ from lakekeeper_mcp.auth import get_client
 from lakekeeper_mcp.kg_ingest import register_ingest_tools  # noqa: F401
 from lakekeeper_mcp.mcp.mcp_lakekeeper import register_lakekeeper_tools  # noqa: F401
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 logger = get_logger(name="lakekeeper_mcp")
 
 
