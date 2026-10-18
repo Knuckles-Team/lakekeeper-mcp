@@ -6,8 +6,6 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Python Lakekeeper API + MCP Server + A2A Agent — a typed, deterministic Lakekeeper (Apache Iceberg REST catalog) tool surface for the agent-utilities ecosystem.">
-      
       
       
         <link rel="canonical" href="https://knuckles-team.github.io/lakekeeper-mcp/configuration/">
@@ -583,7 +581,7 @@
 for the full, authoritative list — the code (<code>auth.py</code>, <code>mcp/mcp_lakekeeper.py</code>,
 <code>kg_ingest.py</code>) is the source of truth; <code>.env.example</code>, every <code>mcp_config*.json</code>,
 <code>docker/*compose*.yml</code>, and this table must all match it exactly (enforced by
-<code>python -m agent_utilities.mcp.check_env_var_drift --check</code>).</p>
+<code>python -m agent_connector_sdk.mcp.check_env_var_drift --check</code>).</p>
 <h2 id="the-scopelakekeeper-landmine">The <code>scope=lakekeeper</code> landmine<a class="headerlink" href="#the-scopelakekeeper-landmine" title="Permanent link">&para;</a></h2>
 <p>Lakekeeper's Keycloak client (<code>lakekeeper-service</code>) is provisioned for
 <code>scope=lakekeeper</code>. The shared Iceberg-REST/OAuth2 client convention multiple SDKs
@@ -600,7 +598,7 @@ Pointing this env var at <code>.../catalog</code> is the most common first-time
 misconfiguration and presents as a confusing 404, not an auth error.</p>
 <h2 id="tls">TLS<a class="headerlink" href="#tls" title="Permanent link">&para;</a></h2>
 <p><code>LAKEKEEPER_TLS_PROFILE</code>/<code>LAKEKEEPER_TLS_PROFILE_REF</code> select a named outbound
-TLS trust policy (via <code>agent_utilities.core.transport_security</code>). The
+TLS trust policy (via <code>agent_connector_sdk.core.transport_security</code>). The
 homelab's internal CA (<code>homelab-arpa-ca</code>) is trusted fleet-wide via the
 <code>homelab-ca-bundle</code> ConfigMap mount; Lakekeeper itself is served over plain
 HTTP at the ingress (<code>http://localhost:8181</code>) — only Keycloak enforces a

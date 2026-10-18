@@ -6,8 +6,6 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Python Lakekeeper API + MCP Server + A2A Agent — a typed, deterministic Lakekeeper (Apache Iceberg REST catalog) tool surface for the agent-utilities ecosystem.">
-      
       
       
         <link rel="canonical" href="https://knuckles-team.github.io/lakekeeper-mcp/architecture/">
@@ -626,21 +624,6 @@
 
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
 <h2 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>lakekeeper_mcp/
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  api/
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    api_client_base.py       # thin requests.Session wrapper, fail-closed
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    api_client_lakekeeper.py # LakekeeperApi: /catalog/v1 + /management/v1
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  api_client.py               # public Api facade
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  auth.py                      # OAuth2 client-credentials, scope=lakekeeper, token cache
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  models.py                    # Pydantic request/response shapes
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  mcp/
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    mcp_lakekeeper.py         # catalog/warehouse/ownership/maintenance/events tools
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  kg_ingest.py                 # native_ingest mapping + lakekeeper_ingest_catalog tool
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  mcp_server.py                 # FastMCP server assembly (register_tool_surface)
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  agent_server.py               # Pydantic-AI A2A agent entry point
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ontology/lakekeeper.ttl        # federated OWL classes/links
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  connector_manifest.yml         # resources/actions/sync declaration (DEC-CA-08)
-</span></code></pre></div>
 <h2 id="why-a-direct-rest-client-not-pyiceberg">Why a direct REST client, not <code>pyiceberg</code><a class="headerlink" href="#why-a-direct-rest-client-not-pyiceberg" title="Permanent link">&para;</a></h2>
 <p>Lakekeeper's REST surface is the standard Iceberg REST Catalog spec
 (<code>/catalog/v1/...</code>) plus its own Management API (<code>/management/v1/...</code>). The
