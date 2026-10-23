@@ -2,7 +2,7 @@
 
 from lakekeeper_mcp.api.api_client_lakekeeper import LakekeeperApi, LakekeeperApiError
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 __all__ = ["Api", "LakekeeperApiError"]
 
