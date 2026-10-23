@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lakekeeper-mcp"
-version = "0.3.1"
+version = "0.3.2"
 description = "Lakekeeper (Apache Iceberg REST catalog) API + MCP Server for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
