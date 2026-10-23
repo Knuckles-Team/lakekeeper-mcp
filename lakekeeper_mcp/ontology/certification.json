@@ -1,7 +1,6 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "5a379f4e340c7870d645d575282ab305dc1b411795d16750918e5c44dede5ad0",
     "lakekeeper_mcp/ontology/fixtures/records.json": "2a3d8d68bec9d4488d4225b3cb4b0fc41f4b5409b412066b86a70393ae8aec8d",
     "lakekeeper_mcp/ontology/lakekeeper.ttl": "212ea78bc4f4c79b4e9113eaab5a2e5e70ecd9e21bd4656298892a410a31e6cb",
     "lakekeeper_mcp/ontology/mappings/source.yaml": "6908ca1bf4cca26256cfc8d0b156e4da4e5546d8e1f47bffcb7ae442ddad4d47",

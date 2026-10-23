@@ -86,5 +86,4 @@
     agent-connector-sdk knowledge-graph hub. This is the ONE live, reachable
     Iceberg-REST catalog on the platform (Trino/Spark's sibling lanes both proved
     real end-to-end reads through it; eg's own Iceberg-REST catalog is not
-    reachable from other pods).""" ;
-    owl:imports <http://knuckles.team/kg> .
+    reachable from other pods).""" .
