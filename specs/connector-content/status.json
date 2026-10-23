@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "spec_id": "CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT",
+  "owner_repo": "lakekeeper-mcp",
+  "delivery_state": "VERIFIED",
+  "requirement_ids": [
+    "CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R001"
+  ],
+  "requirements": [
+    {
+      "id": "CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R001",
+      "title": "Default content",
+      "delivery_state": "VERIFIED",
+      "landed_in": [
+        "fbfb2511897e"
+      ],
+      "verified_by": [
+        "tests/test_default_content_surfaces.py:15"
+      ]
+    }
+  ]
+}
