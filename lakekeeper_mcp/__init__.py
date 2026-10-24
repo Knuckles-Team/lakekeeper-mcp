@@ -1,60 +1,13 @@
 """lakekeeper-mcp: Lakekeeper (Iceberg REST catalog) API + MCP Server + A2A Server."""
 
-import importlib
-import inspect
-from typing import Any
+from agent_connector_sdk.connector import Connector
 
-__version__ = "0.3.3"
-__all__: list[str] = []
+from lakekeeper_mcp.api_client import Api
+from lakekeeper_mcp.auth import get_client
 
-CORE_MODULES = ["lakekeeper_mcp.api_client"]
-OPTIONAL_MODULES = {
-    "lakekeeper_mcp.mcp_server": "mcp",
-}
-
-
-def _expose_members(module):
-    for name, obj in inspect.getmembers(module):
-        if (inspect.isclass(obj) or inspect.isfunction(obj)) and not name.startswith(
-            "_"
-        ):
-            globals()[name] = obj
-            if name not in __all__:
-                __all__.append(name)
-
-
-for module_name in CORE_MODULES:
-    module = importlib.import_module(module_name)
-    _expose_members(module)
-
-_loaded_optional_modules: dict[str, Any] = {}
-
-
-def _import_module_safely(module_name: str):
-    try:
-        return importlib.import_module(module_name)
-    except ImportError:
-        return None
-
-
-def __getattr__(name: str) -> Any:
-    if name == "_MCP_AVAILABLE":
-        mcp_key = next((k for k in OPTIONAL_MODULES if "mcp_server" in k), None)
-        return _import_module_safely(mcp_key) is not None if mcp_key else False
-
-    for module_name in OPTIONAL_MODULES:
-        if module_name not in _loaded_optional_modules:
-            module = _import_module_safely(module_name)
-            if module is not None:
-                _loaded_optional_modules[module_name] = module
-                _expose_members(module)
-
-        module = _loaded_optional_modules.get(module_name)
-        if module is not None and hasattr(module, name):
-            return getattr(module, name)
-
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-
-
-def __dir__() -> list[str]:
-    return sorted(list(globals().keys()) + __all__)
+connector = Connector(
+    api=Api,
+    get_client=get_client,
+    tools="lakekeeper_mcp.mcp_server",
+    instructions="Lakekeeper (Apache Iceberg REST catalog) MCP Server — namespace/table/snapshot/warehouse catalog admin, ownership classification, maintenance-request delegation (never executes expire_snapshots/compact in-process), and a Wire-First KG catalog ingest tool.",
+)

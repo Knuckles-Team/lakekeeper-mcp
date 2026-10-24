@@ -18,7 +18,7 @@ def test_map_warehouse_produces_lake_warehouse_node():
         "storage-profile": {
             "type": "s3",
             "bucket": "lakehouse",
-            "endpoint": "http://lakehouse-seaweedfs.apps.svc.cluster.local:8333/",
+            "endpoint": "http://lakehouse-seaweedfs.apps.svc.cluster.example:8333/",
             "sts-enabled": False,
         },
     }
