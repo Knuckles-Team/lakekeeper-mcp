@@ -20,8 +20,6 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/lakekeeper-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/lakekeeper-mcp)
 
-*Version: 0.1.0*
-
 > **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
 > [official documentation](https://knuckles-team.github.io/lakekeeper-mcp/).
 

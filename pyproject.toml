@@ -4,42 +4,31 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lakekeeper-mcp"
-version = "0.3.3"
+version = "0.3.4"
 description = "Lakekeeper (Apache Iceberg REST catalog) API + MCP Server for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12"
-dependencies = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0", "requests>=2.34.2",]
+dependencies = [ "agent-connector-sdk[mcp]>=0.5.4,<0.6.0", "requests>=2.34.2",]
 [[project.authors]]
-name = "Project Maintainers"
-email = "maintainers@users.noreply.github.com"
+name = "Repository Maintainers"
+email = "maintainers@knuckles.team"
 
 [project.license]
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
-all = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
 test = [ "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
 [project.scripts]
-lakekeeper-mcp = "lakekeeper_mcp.mcp_server:mcp_server"
-
-[project.entry-points."agent_connector_sdk.skill_providers"]
-lakekeeper-mcp = "lakekeeper_mcp.skills"
-
-[project.entry-points."agent_connector_sdk.ontology_providers"]
-lakekeeper-mcp = "lakekeeper_mcp.ontology"
+lakekeeper-mcp = "agent_connector_sdk.cli:serve"
 
 [project.entry-points."agent_connector_sdk.prompt_providers"]
 lakekeeper-mcp = "lakekeeper_mcp.prompts"
 
-[project.entry-points."agent_connector_sdk.source_connector_providers"]
-lakekeeper-mcp = "lakekeeper_mcp.connectors"
-
 # The one declared connector identity: the fleet name (SDK-CONNECTOR-CONTROL-R071).
 [project.entry-points."agent_connector_sdk.connector"]
-lakekeeper-mcp = "lakekeeper_mcp"
+lakekeeper-mcp = "lakekeeper_mcp:connector"
 
 [tool.uv.workspace]
 members = ["."]
@@ -48,6 +37,7 @@ members = ["."]
 include-package-data = true
 
 [tool.ruff]
+extend-exclude = ["tests"]
 line-length = 88
 target-version = "py310"
 
@@ -77,3 +67,9 @@ override-dependencies = [
 
 [tool.pipelines_hooks.ste]
 exempt = ["specs/*", "specs/**/*"]
+
+[tool.pipelines.container]
+debug_apt = ["default-jre", "ripgrep", "tree", "fd-find", "curl", "nano", "build-essential", "cmake", "libssl-dev", "libcurl4-openssl-dev", "pkg-config", "cargo", "rustc"]
+
+[tool.pipelines.codespell]
+ignore_words = ["hastable"]

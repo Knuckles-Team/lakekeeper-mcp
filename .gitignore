@@ -16,3 +16,8 @@ dist/
 # standalone against its own tracked lock instead of the ecosystem workspace.
 # Never tracked.
 .uv-workspace-siblings/
+docker/Dockerfile
+docker/debug.Dockerfile
+docker/*.compose.yml
+lakekeeper_mcp/ontology/shapes/connector.shacl.ttl
+lakekeeper_mcp/ontology/certification.json
