@@ -13,6 +13,8 @@ def _workflow():
 
 
 def test_pages_publishes_the_spec_dashboard_from_the_docs_tree():
+    assert not (ROOT / ".github/workflows/docs.yml").exists()
+
     workflow = _workflow()
     publisher = workflow["jobs"]["publish-pages"]
 
