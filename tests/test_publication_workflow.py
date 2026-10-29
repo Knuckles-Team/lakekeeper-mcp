@@ -3,18 +3,12 @@
 import json
 from pathlib import Path
 
-import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-
-
 def test_pages_publishes_the_spec_dashboard_from_the_docs_tree():
     assert not (ROOT / ".github/workflows/docs.yml").exists()
-
-
-
 
 
 def test_spec_dashboard_config_uses_the_canonical_status_source():
