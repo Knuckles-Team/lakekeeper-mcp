@@ -22,7 +22,7 @@ Tool-neutral rules for any AI agent or human working in this repository. This bl
 
 ## Tech Stack
 - Python 3.12+
-- agent-connector-sdk >= 2.0.0, <3.0.0
+- scion-sdk >= 2.0.0, <3.0.0
 - Model Context Protocol (MCP)
 - Direct authenticated `requests` calls against Lakekeeper's Iceberg REST +
   Management APIs — **deliberately no `pyiceberg` dependency** (see
@@ -33,7 +33,7 @@ Tool-neutral rules for any AI agent or human working in this repository. This bl
 ## Commands
 - `pytest`: Run tests
 - `pre-commit run --all-files`: Lint code
-- `python -m agent_connector_sdk.mcp.check_env_var_drift --check`: env-var drift gate (must be 0)
+- `python -m scion_sdk.mcp.check_env_var_drift --check`: env-var drift gate (must be 0)
 
 ## Domain notes (read before touching `auth.py` or `api_client_lakekeeper.py`)
 - Lakekeeper's Iceberg REST surface is rooted at `/catalog/v1`, **not** `/v1` —
@@ -59,8 +59,8 @@ Tool-neutral rules for any AI agent or human working in this repository. This bl
 ## ActionSpec / DEC-CA-07 status (as of this package's initial build, 2026-08-26)
 `CA-32` (the `ActionSpec` schema extension adding `parameters`/`target_resource`/
 `conflict_policy`/`requires_approval`/`approval_class`) has **not** merged onto
-`agent-connector-sdk` `main` yet — confirmed by reading
-`agent_connector_sdk/knowledge_graph/ontology/connector_manifest.py:274-284` (still
+`scion-sdk` `main` yet — confirmed by reading
+`scion_sdk/knowledge_graph/ontology/connector_manifest.py:274-284` (still
 the three-field `{id, name, description}` shape) and the `feat/ca32-actionspec`
 worktree (staged, uncommitted). This package's `connector_manifest.yml` therefore
 carries only the boilerplate two-field `actions:` entries every generated
@@ -72,26 +72,26 @@ The tool itself is fully implemented and callable now.
 `connector_manifest.yml` and the full capability certification bundle
 (`lakekeeper_mcp/ontology/{certification.json,shapes/connector.shacl.ttl,
 mappings/source.yaml,fixtures/records.json,migrations/manifest.json}`) are
-generated via `agent-connector-sdk`'s real generator scripts
+generated via `scion-sdk`'s real generator scripts
 (`generate_connector_manifests.py` / `generate_connector_capability_bundles.py`),
 same shape as every other connector in the fleet. The registration work
 needed to unblock this (workspace.yml's three mirrors, four hardcoded
-68->69 fleet-count constants across agent-connector-sdk, the bundle
-generation itself) is done — see the `agent-connector-sdk` branch
+68->69 fleet-count constants across scion-sdk, the bundle
+generation itself) is done — see the `scion-sdk` branch
 `ca/ca-40-lakekeeper-mcp-registration` for the full accounting.
 
 **One remaining, well-evidenced blocker**, confirmed via a direct
 `check_one()` call (not inferred): `lakekeeper-mcp` has exactly ONE
 violation, `"certification differs from its signed release pin"`,
-because it has no entry yet in `agent_connector_sdk/knowledge_graph/
+because it has no entry yet in `scion_sdk/knowledge_graph/
 ontology.lock`. `scripts/update_ontology_lock.py` requires a trusted
 release-signing public key
 (`ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY_REF`, documented as
-`vault://agent-connector-sdk#ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY@2` in
+`vault://scion-sdk#ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY@2` in
 `docs/architecture/drift_proof_release.md`) that is not configured in
 this environment; both `OPENBAO_TOKEN` and `OPENBAO_ADMIN_TOKEN`
 available here return `permission denied` against
-`apps/data/agent-connector-sdk`. This needs whoever holds that key's
+`apps/data/scion-sdk`. This needs whoever holds that key's
 custody to run `update_ontology_lock.py` once — a one-shot,
 already-safe (atomic, no-op-on-failure) operation, not a design gap in
 this package.
@@ -99,11 +99,11 @@ this package.
 Separately (lower priority, does not block the release-catalog gate):
 `scripts/check_connector_manifests.py --manifest connector_manifest.yml`
 still reports one `[anti-sprawl]` violation because
-`http://knuckles.team/kg/lakekeeper` is not yet in `agent-connector-sdk`'s
+`http://knuckles.team/kg/lakekeeper` is not yet in `scion-sdk`'s
 `REGISTERED_FEDERATED_IRIS` whitelist
-(`agent_connector_sdk/knowledge_graph/core/ontology_federation.py`) — the
+(`scion_sdk/knowledge_graph/core/ontology_federation.py`) — the
 same onboarding step `jena`/`egeria` went through. Also a follow-up in
-`agent-connector-sdk`, not a defect in this package's own manifest or
+`scion-sdk`, not a defect in this package's own manifest or
 ontology.
 
 ## ⛔ Keep the Repository Root Pristine — No Scratch / Temp / Debug Files

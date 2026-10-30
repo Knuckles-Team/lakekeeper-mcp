@@ -24,8 +24,8 @@ import time
 from typing import Any
 
 import requests
-from agent_connector_sdk.config import setting
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from scion_sdk.config import setting
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 from lakekeeper_mcp.api.api_client_base import LakekeeperApiError
 from lakekeeper_mcp.api_client import Api

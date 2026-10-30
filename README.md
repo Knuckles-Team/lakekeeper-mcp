@@ -58,7 +58,7 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`agent-connector-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
 | `lakekeeper-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -150,7 +150,7 @@ authority.
 | `LAKEKEEPERTOOL` | `True` |  |
 | `INGESTTOOL` | `True` |  |
 
-#### Inherited agent-connector-sdk variables (apply to every connector)
+#### Inherited scion-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -178,7 +178,7 @@ authority.
 | `PROVIDER` | `openai` | LLM provider for the agent |
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 
-_12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
+_12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared scion-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 | Variable | Required | Notes |
@@ -194,7 +194,7 @@ _12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the
 | `LAKEKEEPER_TLS_PROFILE` / `LAKEKEEPER_TLS_PROFILE_REF` | optional | Named outbound TLS trust policy. |
 | `LAKEKEEPERTOOL` | optional | Tool-group toggle (set `False` to disable the catalog/warehouse/ownership/maintenance/events tools). Default `True`. |
 | `INGESTTOOL` | optional | Tool-group toggle for `lakekeeper_ingest_catalog`. Default `True`. |
-| `MCP_TOOL_MODE` | optional | `condensed` \| `verbose` \| `both` \| `intent` (inherited from agent-connector-sdk). |
+| `MCP_TOOL_MODE` | optional | `condensed` \| `verbose` \| `both` \| `intent` (inherited from scion-sdk). |
 
 ## MCP Tools
 
@@ -286,15 +286,15 @@ Contributions are welcome! Please ensure code quality by running local checks be
 - Validate type-safety with `mypy .`
 - Run test suites using `pytest`
 
-<!-- BEGIN agent-connector-sdk-deployment (generated; do not edit between markers) -->
+<!-- BEGIN scion-sdk-deployment (generated; do not edit between markers) -->
 
-## Deploy with `agent-connector-sdk-deployment`
+## Deploy with `scion-sdk-deployment`
 
-Provision this package with the consolidated **`agent-connector-sdk-deployment`**
+Provision this package with the consolidated **`scion-sdk-deployment`**
 workflow. It selects an installed-package, editable-source, or immutable-container
 path; records only runtime secret and TLS-profile references in `AgentConfig`; and
 runs doctor, registration, policy, observability, and rollback gates. Ask your agent
-to **"deploy `lakekeeper-mcp` with agent-connector-sdk-deployment"**.
+to **"deploy `lakekeeper-mcp` with scion-sdk-deployment"**.
 
 | Install mode | Command |
 |------|---------|
@@ -305,7 +305,7 @@ The repository embeds no deployment profile, credential value, certificate path,
 environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
 configured secret provider.
 
-<!-- END agent-connector-sdk-deployment -->
+<!-- END scion-sdk-deployment -->
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract

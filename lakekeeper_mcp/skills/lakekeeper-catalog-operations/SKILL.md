@@ -15,7 +15,7 @@ description: >-
 license: MIT
 tags: [lakekeeper, iceberg, catalog, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Lakekeeper Catalog Operations
