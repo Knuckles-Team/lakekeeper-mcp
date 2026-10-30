@@ -10,7 +10,7 @@ license: MIT
 tags: [lakekeeper, iceberg, catalog, development, connector, test, gates]
 tier: repository
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 
@@ -20,7 +20,7 @@ This repository owns the Lakekeeper Iceberg REST and Management API facade,
 OAuth2 authentication boundary, catalog/warehouse/ownership/maintenance-request
 MCP tools, ontology and KG ingestion mappings, and packaged connector content.
 Shared connector contracts, transports, TLS profiles, and credential helpers
-belong to `agent-connector-sdk`; admission, serving, and durable graph state
+belong to `scion-sdk`; admission, serving, and durable graph state
 belong to their owning repositories. Read `AGENTS.md` before changing code and
 keep credentials, private endpoints, tenant data, and customer records out of
 source, logs, fixtures, and skill content.
@@ -105,7 +105,7 @@ copy those hooks locally or bypass a failing check.
 
 ## Packaging and publication
 
-`pyproject.toml` declares the `agent_connector_sdk.connector` entry point
+`pyproject.toml` declares the `scion_sdk.connector` entry point
 `lakekeeper-mcp = "lakekeeper_mcp:connector"` and packages `skills/**`,
 `ontology/**`, `connectors/**`, prompts, and `mcp_config.json`. For a genuine
 packaged-content release, keep the project version, `CHANGELOG.md`, and the

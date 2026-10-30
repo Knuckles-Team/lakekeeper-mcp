@@ -4,7 +4,7 @@ See the [README's Environment Variables table](../README.md#environment-variable
 for the full, authoritative list — the code (`auth.py`, `mcp/mcp_lakekeeper.py`,
 `kg_ingest.py`) is the source of truth; `.env.example`, every `mcp_config*.json`,
 `docker/*compose*.yml`, and this table must all match it exactly (enforced by
-`python -m agent_connector_sdk.mcp.check_env_var_drift --check`).
+`python -m scion_sdk.mcp.check_env_var_drift --check`).
 
 ## The `scope=lakekeeper` landmine
 
@@ -27,7 +27,7 @@ misconfiguration and presents as a confusing 404, not an auth error.
 ## TLS
 
 `LAKEKEEPER_TLS_PROFILE`/`LAKEKEEPER_TLS_PROFILE_REF` select a named outbound
-TLS trust policy (via `agent_connector_sdk.core.transport_security`). The
+TLS trust policy (via `scion_sdk.core.transport_security`). The
 homelab's internal CA (`homelab-arpa-ca`) is trusted fleet-wide via the
 `homelab-ca-bundle` ConfigMap mount; Lakekeeper itself is served over plain
 HTTP at the ingress (`http://localhost:8181`) — only Keycloak enforces a

@@ -83,7 +83,7 @@
     rdfs:label "Lakekeeper (Apache Iceberg REST Catalog) Ontology" ;
     rdfs:comment """Lakekeeper Iceberg REST catalog topology — warehouses, catalogs,
     namespaces, tables, snapshots, and schema versions — federated into the
-    agent-connector-sdk knowledge-graph hub. This is the ONE live, reachable
+    scion-sdk knowledge-graph hub. This is the ONE live, reachable
     Iceberg-REST catalog on the platform (Trino/Spark's sibling lanes both proved
     real end-to-end reads through it; eg's own Iceberg-REST catalog is not
     reachable from other pods).""" .

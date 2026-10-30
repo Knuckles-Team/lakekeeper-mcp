@@ -1,6 +1,6 @@
 """lakekeeper-mcp: Lakekeeper (Iceberg REST catalog) API + MCP Server + A2A Server."""
 
-from agent_connector_sdk.connector import Connector
+from scion_sdk.connector import Connector
 
 from lakekeeper_mcp.api_client import Api
 from lakekeeper_mcp.auth import get_client

@@ -10,7 +10,7 @@ nodes (``:LakeWarehouse``, ``:IcebergCatalog``, ``:IcebergNamespace``,
 ``hasNamespace``/``hasTable``/``hasSnapshot``/``parentSnapshot``/``storedIn``/
 ``hasSchemaVersion`` relations.
 
-The txn write path is ``agent_connector_sdk.ingest``'s generated SourceIngest
+The txn write path is ``scion_sdk.ingest``'s generated SourceIngest
 client, not a local ingestion helper. Node ids follow
 ``lakekeeper:<class>:<externalId>``; ``node_type`` on each entity matches a
 class federated by ``lakekeeper_mcp.ontology`` (``lakekeeper.ttl``). Batches at
@@ -22,7 +22,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from fastmcp import FastMCP
+from pydantic import Field
+from scion_sdk.ingest import (
     ChangeSet,
     Entity,
     IngestBinding,
@@ -31,8 +33,6 @@ from agent_connector_sdk.ingest import (
     Relationship,
     current_ingest,
 )
-from fastmcp import FastMCP
-from pydantic import Field
 
 from lakekeeper_mcp.auth import get_client
 
@@ -362,7 +362,7 @@ def register_ingest_tools(mcp: FastMCP) -> None:
         -> ``:IcebergSnapshot``/``:IcebergSchemaVersion`` chains, plus
         ``:LakeWarehouse``/``storedIn`` linkage. Never partially commits.
         """
-        from agent_connector_sdk.config import setting
+        from scion_sdk.config import setting
 
         wh = warehouse or setting("LAKEKEEPER_WAREHOUSE", "")
         result = await ingest_catalog(wh, include_schemas=include_schemas)
