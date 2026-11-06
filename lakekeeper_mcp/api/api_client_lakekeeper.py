@@ -49,7 +49,7 @@ class LakekeeperApi(ApiClientBase):
         self._prefix_cache: dict[str, str] = {}
 
     # ── catalog discovery ────────────────────────────────────────────────
-    def get_config(self, warehouse: str = "") -> dict[str, Any]:
+    def _get_config(self, warehouse: str = "") -> dict[str, Any]:
         """Iceberg REST catalog discovery for one warehouse.
 
         Returns Lakekeeper's ``{"overrides": {...}, "defaults": {...}}`` config
@@ -69,7 +69,7 @@ class LakekeeperApi(ApiClientBase):
                 "(LAKEKEEPER_WAREHOUSE) or passed explicitly"
             )
         if wh not in self._prefix_cache:
-            config = self.get_config(wh)
+            config = self._get_config(wh)
             prefix = (config.get("defaults") or {}).get("prefix")
             if not prefix:
                 raise LakekeeperApiError(
@@ -80,7 +80,7 @@ class LakekeeperApi(ApiClientBase):
         return self._prefix_cache[wh]
 
     # ── catalog: namespaces ──────────────────────────────────────────────
-    def fetch_namespaces(
+    def _fetch_namespaces(
         self, warehouse: str = "", parent: str = ""
     ) -> list[list[str]]:
         prefix = self._resolve_prefix(warehouse)
@@ -88,19 +88,21 @@ class LakekeeperApi(ApiClientBase):
         result = self.request("GET", f"/catalog/v1/{prefix}/namespaces", params=params)
         return result.get("namespaces", [])
 
-    def fetch_namespace(self, namespace: str, warehouse: str = "") -> dict[str, Any]:
+    def _fetch_namespace(self, namespace: str, warehouse: str = "") -> dict[str, Any]:
         prefix = self._resolve_prefix(warehouse)
         return self.request("GET", f"/catalog/v1/{prefix}/namespaces/{namespace}")
 
     # ── catalog: tables ──────────────────────────────────────────────────
-    def fetch_tables(self, namespace: str, warehouse: str = "") -> list[dict[str, Any]]:
+    def _fetch_tables(
+        self, namespace: str, warehouse: str = ""
+    ) -> list[dict[str, Any]]:
         prefix = self._resolve_prefix(warehouse)
         result = self.request(
             "GET", f"/catalog/v1/{prefix}/namespaces/{namespace}/tables"
         )
         return result.get("identifiers", [])
 
-    def fetch_table(
+    def _fetch_table(
         self, namespace: str, table: str, warehouse: str = ""
     ) -> dict[str, Any]:
         """Full table load response, including ``metadata.snapshots`` and
@@ -112,7 +114,7 @@ class LakekeeperApi(ApiClientBase):
             "GET", f"/catalog/v1/{prefix}/namespaces/{namespace}/tables/{table}"
         )
 
-    def fetch_snapshots(
+    def _fetch_snapshots(
         self, namespace: str, table: str, warehouse: str = ""
     ) -> list[dict[str, Any]]:
         """Snapshot history for one table.
@@ -122,26 +124,26 @@ class LakekeeperApi(ApiClientBase):
         caller can distinguish "table not found" from "table has no
         snapshots yet" (this lane's acceptance gate 3's known-bad case).
         """
-        metadata = self.fetch_table(namespace, table, warehouse).get("metadata", {})
+        metadata = self._fetch_table(namespace, table, warehouse).get("metadata", {})
         return metadata.get("snapshots", [])
 
-    def fetch_schema_versions(
+    def _fetch_schema_versions(
         self, namespace: str, table: str, warehouse: str = ""
     ) -> list[dict[str, Any]]:
-        metadata = self.fetch_table(namespace, table, warehouse).get("metadata", {})
+        metadata = self._fetch_table(namespace, table, warehouse).get("metadata", {})
         return metadata.get("schemas", [])
 
     # ── management: warehouses ───────────────────────────────────────────
-    def fetch_warehouses(self, project_id: str = "") -> list[dict[str, Any]]:
+    def _fetch_warehouses(self, project_id: str = "") -> list[dict[str, Any]]:
         params = {"projectId": project_id} if project_id else None
         result = self.request("GET", "/management/v1/warehouse", params=params)
         return result.get("warehouses", [])
 
-    def fetch_warehouse(self, warehouse_id: str) -> dict[str, Any]:
+    def _fetch_warehouse(self, warehouse_id: str) -> dict[str, Any]:
         return self.request("GET", f"/management/v1/warehouse/{warehouse_id}")
 
     def get_warehouse_storage_profile(self, warehouse_id: str) -> dict[str, Any]:
-        return self.fetch_warehouse(warehouse_id).get("storage-profile", {})
+        return self._fetch_warehouse(warehouse_id).get("storage-profile", {})
 
     # ── management: server/bootstrap status (read-only) ─────────────────
     def get_server_info(self) -> dict[str, Any]:

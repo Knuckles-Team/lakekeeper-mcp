@@ -209,7 +209,7 @@ _12 package + 24 inherited variable(s). Auto-generated from `.env.example` + the
 | `lakekeeper_get_ownership` / `lakekeeper_set_engine_owned` | ownership | Read/classify write authority |
 | `lakekeeper_maintenance_status` | maintenance | Read-only snapshot-count/age signal |
 | `lakekeeper_request_expire_snapshots` / `lakekeeper_request_compaction` | maintenance | Name a delegation target; never runs |
-| `lakekeeper_cloudevents_status` / `lakekeeper_cloudevents_subscribe` | events | CloudEvents sink status |
+| `lakekeeper_cloudevents_status` | events | CloudEvents sink status |
 | `lakekeeper_ingest_catalog` | ingest | Wire-First KG catalog ingest |
 
 ## Documentation
@@ -226,7 +226,6 @@ See `docs/` for architecture, configuration, and deployment notes, and
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `lakekeeper_cloudevents_status` | `LAKEKEEPERTOOL` | Report whether this Lakekeeper deployment has a CloudEvents sink configured. |
-| `lakekeeper_cloudevents_subscribe` | `LAKEKEEPERTOOL` | Named as a placeholder for CloudEvents subscription wiring (GOC-80-W04). |
 | `lakekeeper_config` | `LAKEKEEPERTOOL` | Iceberg REST catalog discovery/config for one warehouse. |
 | `lakekeeper_get_namespace` | `LAKEKEEPERTOOL` | Fetch one namespace's properties. |
 | `lakekeeper_get_ownership` | `LAKEKEEPERTOOL` | Read a table's ownership classification (engine vs. lakekeeper-native). |

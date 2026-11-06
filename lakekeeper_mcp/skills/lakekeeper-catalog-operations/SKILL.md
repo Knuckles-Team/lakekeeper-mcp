@@ -68,6 +68,8 @@ Connect via the `mcp-client` skill against the **`lakekeeper-mcp`** MCP server.
 | `lakekeeper_get_ownership` / `lakekeeper_set_engine_owned` | Read/classify write authority — fails closed against overwriting an existing `lakekeeper-native` classification |
 | `lakekeeper_maintenance_status` | Read-only snapshot-count/age signal |
 | `lakekeeper_request_expire_snapshots` / `lakekeeper_request_compaction` | Name a delegation target; never executes |
+| `lakekeeper_get_warehouse_storage_profile` | A warehouse's storage profile (bucket, region, credentials mode) |
+| `lakekeeper_get_server_info` | Lakekeeper server version and bootstrap status |
 | `lakekeeper_cloudevents_status` | Report whether a CloudEvents sink is configured |
 
 ## Failure modes to expect

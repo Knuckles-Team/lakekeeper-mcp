@@ -34,7 +34,9 @@ def _table_status(namespace: str, table: str, warehouse: str) -> dict[str, Any]:
     wrapped function) so the maintenance-request tools below don't depend on
     FastMCP's internal tool-object shape.
     """
-    metadata = get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+    metadata = (
+        get_client()._fetch_table(namespace, table, warehouse).get("metadata", {})
+    )
     snapshots = metadata.get("snapshots", [])
     return {
         "namespace": namespace,
@@ -86,7 +88,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         ),
     ) -> dict[str, Any]:
         """Iceberg REST catalog discovery/config for one warehouse."""
-        return get_client().get_config(warehouse)
+        return get_client()._get_config(warehouse)
 
     @mcp.tool(tags={"catalog"})
     async def lakekeeper_list_namespaces(
@@ -96,7 +98,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         ),
     ) -> dict[str, Any]:
         """List namespaces in a warehouse's catalog."""
-        namespaces = get_client().fetch_namespaces(warehouse, parent)
+        namespaces = get_client()._fetch_namespaces(warehouse, parent)
         return {"namespaces": namespaces, "count": len(namespaces)}
 
     @mcp.tool(tags={"catalog"})
@@ -105,7 +107,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         warehouse: str = Field(default="", description="Warehouse name."),
     ) -> dict[str, Any]:
         """Fetch one namespace's properties."""
-        return get_client().fetch_namespace(namespace, warehouse)
+        return get_client()._fetch_namespace(namespace, warehouse)
 
     @mcp.tool(tags={"catalog"})
     async def lakekeeper_list_tables(
@@ -113,7 +115,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         warehouse: str = Field(default="", description="Warehouse name."),
     ) -> dict[str, Any]:
         """List tables registered under one namespace."""
-        tables = get_client().fetch_tables(namespace, warehouse)
+        tables = get_client()._fetch_tables(namespace, warehouse)
         return {"tables": tables, "count": len(tables)}
 
     @mcp.tool(tags={"catalog"})
@@ -123,7 +125,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         warehouse: str = Field(default="", description="Warehouse name."),
     ) -> dict[str, Any]:
         """Full table load response (metadata, current schema, snapshots)."""
-        return get_client().fetch_table(namespace, table, warehouse)
+        return get_client()._fetch_table(namespace, table, warehouse)
 
     @mcp.tool(tags={"catalog"})
     async def lakekeeper_list_snapshots(
@@ -137,10 +139,10 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         ``get_table``'s underlying 404), never an empty list — so a caller can
         tell "no such table" apart from "table has no snapshots yet".
         """
-        snapshots = get_client().fetch_snapshots(namespace, table, warehouse)
+        snapshots = get_client()._fetch_snapshots(namespace, table, warehouse)
         current = None
         metadata = (
-            get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+            get_client()._fetch_table(namespace, table, warehouse).get("metadata", {})
         )
         current = metadata.get("current-snapshot-id")
         return {
@@ -156,7 +158,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         warehouse: str = Field(default="", description="Warehouse name."),
     ) -> dict[str, Any]:
         """List an Iceberg table's schema-evolution history (schema ids)."""
-        schemas = get_client().fetch_schema_versions(namespace, table, warehouse)
+        schemas = get_client()._fetch_schema_versions(namespace, table, warehouse)
         return {"schemas": schemas, "count": len(schemas)}
 
     # ── warehouse (read-only) ────────────────────────────────────────────
@@ -165,7 +167,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         project_id: str = Field(default="", description="Optional project id filter."),
     ) -> dict[str, Any]:
         """List Lakekeeper warehouses (Management API)."""
-        warehouses = get_client().fetch_warehouses(project_id)
+        warehouses = get_client()._fetch_warehouses(project_id)
         return {"warehouses": warehouses, "count": len(warehouses)}
 
     @mcp.tool(tags={"warehouse"})
@@ -175,7 +177,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         ),
     ) -> dict[str, Any]:
         """Fetch one warehouse's full record, including its storage profile."""
-        return get_client().fetch_warehouse(warehouse_id)
+        return get_client()._fetch_warehouse(warehouse_id)
 
     # ── ownership (DEC-CA-01 / GOC-78 single-writer classification) ──────
     @mcp.tool(tags={"ownership"})
@@ -186,7 +188,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
     ) -> dict[str, Any]:
         """Read a table's ownership classification (engine vs. lakekeeper-native)."""
         metadata = (
-            get_client().fetch_table(namespace, table, warehouse).get("metadata", {})
+            get_client()._fetch_table(namespace, table, warehouse).get("metadata", {})
         )
         return {
             "namespace": namespace,
@@ -233,7 +235,7 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
         now; only its typed-Action manifest declaration is pending.
         """
         client = get_client()
-        current_metadata = client.fetch_table(namespace, table, warehouse).get(
+        current_metadata = client._fetch_table(namespace, table, warehouse).get(
             "metadata", {}
         )
         current_owner = _ownership_of(current_metadata)
@@ -357,18 +359,3 @@ def register_lakekeeper_tools(mcp: FastMCP) -> None:
                 "this client; not configured in this deployment as of this lane."
             ),
         }
-
-    @mcp.tool(tags={"events"})
-    async def lakekeeper_cloudevents_subscribe() -> dict[str, Any]:
-        """Named as a placeholder for CloudEvents subscription wiring (GOC-80-W04).
-
-        Not implemented: Lakekeeper publishes CloudEvents to a configured
-        Nats/Kafka sink, not to a per-caller webhook this MCP could subscribe
-        to. A real implementation needs the sink's own consumer (kafka-mcp's
-        Kafka Connect tool groups, DEC-CA-08) reading the configured topic —
-        this tool documents that boundary rather than faking a subscription.
-        """
-        raise LakekeeperApiError(
-            "lakekeeper_cloudevents_subscribe is not implemented: subscribe to "
-            "the configured Nats/Kafka sink via kafka-mcp instead of this tool"
-        )
