@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import re
-import tomllib
 from pathlib import Path
 
 import pytest
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "lakekeeper_mcp" / "skills" / "lakekeeper-mcp-development" / "SKILL.md"

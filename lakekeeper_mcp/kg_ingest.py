@@ -244,7 +244,7 @@ async def ingest_catalog(
     entities: list[dict[str, Any]] = [map_catalog(warehouse)]
     relationships: list[dict[str, Any]] = []
 
-    namespaces = api.fetch_namespaces(warehouse)
+    namespaces = api._fetch_namespaces(warehouse)
     for namespace_parts in namespaces:
         namespace = ".".join(namespace_parts)
         ns_entity = map_namespace(warehouse, namespace_parts)
@@ -257,7 +257,7 @@ async def ingest_catalog(
             }
         )
 
-        for identifier in api.fetch_tables(namespace, warehouse):
+        for identifier in api._fetch_tables(namespace, warehouse):
             table_name = identifier.get("name")
             if not table_name:
                 continue
@@ -278,7 +278,7 @@ async def ingest_catalog(
                 }
             )
 
-            table_metadata = api.fetch_table(namespace, table_name, warehouse).get(
+            table_metadata = api._fetch_table(namespace, table_name, warehouse).get(
                 "metadata", {}
             )
             snap_entities, snap_rels = map_snapshots(

@@ -6,7 +6,23 @@ Served live as ``connector://resources``. Regenerate by editing the declarations
 # ruff: noqa: E501
 from __future__ import annotations
 
-SOURCES = ()
+from scion_sdk.ingest.live_declaration import source_meta
+
+CONNECTOR = "lakekeeper-mcp"
+
+SOURCES = (
+    source_meta(
+        tool="lakekeeper_list_warehouses",
+        source_id="lakekeeper-warehouses",
+        record_type="LakeWarehouse",
+        id_field="id",
+        preset={"doc_type": "lakekeeper_warehouse", "params_style": "args"},
+        records_path="warehouses",
+        server="lakekeeper-mcp",
+        text_field="name",
+        title_field="name",
+    ),
+)
 
 SCHEMA_MAPPINGS = {
     "IcebergCatalog": {

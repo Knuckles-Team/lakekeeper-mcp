@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Central connector migration: requires `agent-connector-sdk>=0.5.4`; server bootstrap, version, containers, ontology artifacts, security scaffold and pre-commit config are provided centrally.
 
 ## [Unreleased]
+### Surface backfill (scion-sdk 0.9.0)
+- Removed the duplicate raw `lakekeeper_fetch_*` and `lakekeeper_get_config` tools (the curated `list_*`/`get_*`/`config` tools remain) and the always-failing `lakekeeper_cloudevents_subscribe` placeholder.
+- Declared a data resource, tool-use contracts, links, data locations, business roles, an operator prompt and two business-role prompts; raised `scion-sdk` to `>=0.9.0`.
+
 
 ## [0.1.0] - 2026-08-26
 
