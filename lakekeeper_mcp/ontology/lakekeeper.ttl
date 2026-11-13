@@ -1,7 +1,8 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix core: <https://knuckles-team.github.io/ontology/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix : <http://knuckles.team/kg#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/lakekeeper#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -18,26 +19,32 @@
 # --- classes (owl:Class) ---
 
 :LakeWarehouse a owl:Class ;
+    rdfs:subClassOf core:Warehouse ;
     rdfs:label "Lake Warehouse" ;
     rdfs:comment "A Lakekeeper warehouse: one storage profile (bucket/prefix) plus its own auth/vending config (lakekeeper_warehouse list/get)." .
 
 :IcebergCatalog a owl:Class ;
+    rdfs:subClassOf core:DataCatalog ;
     rdfs:label "Iceberg Catalog" ;
     rdfs:comment "The REST Iceberg catalog control plane rooted at one Lakekeeper deployment (lakekeeper_catalog config)." .
 
 :IcebergNamespace a owl:Class ;
+    rdfs:subClassOf core:Collection ;
     rdfs:label "Iceberg Namespace" ;
     rdfs:comment "A namespace (schema) within a warehouse's catalog, grouping tables (lakekeeper_catalog list_namespaces)." .
 
 :IcebergTable a owl:Class ;
+    rdfs:subClassOf core:Table ;
     rdfs:label "Iceberg Table" ;
     rdfs:comment "An Iceberg table registered in a namespace, with its own metadata location and snapshot history (lakekeeper_catalog list_tables/get_table)." .
 
 :IcebergSnapshot a owl:Class ;
+    rdfs:subClassOf core:Snapshot ;
     rdfs:label "Iceberg Snapshot" ;
     rdfs:comment "One committed snapshot of an IcebergTable: a snapshot id, operation, and parent linkage (lakekeeper_catalog list_snapshots)." .
 
 :IcebergSchemaVersion a owl:Class ;
+    rdfs:subClassOf core:SchemaVersion ;
     rdfs:label "Iceberg Schema Version" ;
     rdfs:comment "One schema id in an IcebergTable's schema evolution history (lakekeeper_catalog get_table)." .
 
@@ -79,7 +86,7 @@
     rdfs:domain :IcebergTable ;
     rdfs:range :IcebergSchemaVersion .
 
-<http://knuckles.team/kg/lakekeeper> a owl:Ontology ;
+<https://knuckles-team.github.io/ontology/connector/lakekeeper> a owl:Ontology ;
     rdfs:label "Lakekeeper (Apache Iceberg REST Catalog) Ontology" ;
     rdfs:comment """Lakekeeper Iceberg REST catalog topology — warehouses, catalogs,
     namespaces, tables, snapshots, and schema versions — federated into the

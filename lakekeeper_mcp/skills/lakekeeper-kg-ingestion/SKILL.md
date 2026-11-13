@@ -2,7 +2,7 @@
 name: lakekeeper-kg-ingestion
 skill_type: skill
 description: >-
-  Push a Lakekeeper warehouse's Iceberg catalog into the epistemic-graph
+  Push a Lakekeeper warehouse's Iceberg catalog into the medulla
   Knowledge Graph as typed OWL nodes via the lakekeeper-mcp MCP server's
   Wire-First ingest tool — warehouses, namespaces, tables, snapshots (with
   parent-snapshot lineage), and schema versions. Use when the agent must make
@@ -18,7 +18,7 @@ metadata:
 # Lakekeeper KG Ingestion
 
 Walks one warehouse's full catalog (namespaces -> tables -> snapshots/schema
-versions) and writes it into the epistemic-graph engine as typed OWL nodes,
+versions) and writes it into the medulla engine as typed OWL nodes,
 through the required `native_ingest` (Wire-First / `ApplyChangeEnvelope`)
 authority — never a bespoke write path.
 

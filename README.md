@@ -42,7 +42,7 @@ classification (engine vs. Lakekeeper-native, per DEC-CA-01/GOC-78), and
 maintenance-request delegation (this package never runs `expire_snapshots`/
 `compact` itself — it names the delegate: Trino or Spark's own MCPs). A
 Wire-First `lakekeeper_ingest_catalog` tool pushes the full catalog into the
-epistemic-graph Knowledge Graph as typed OWL nodes.
+medulla Knowledge Graph as typed OWL nodes.
 
 Lakekeeper is the ONE live, reachable Iceberg-REST catalog on this platform —
 Trino and Spark have both proven real end-to-end reads through it
@@ -58,7 +58,7 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `lakekeeper-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
 | `lakekeeper-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash

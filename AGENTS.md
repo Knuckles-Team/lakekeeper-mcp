@@ -99,7 +99,7 @@ this package.
 Separately (lower priority, does not block the release-catalog gate):
 `scripts/check_connector_manifests.py --manifest connector_manifest.yml`
 still reports one `[anti-sprawl]` violation because
-`http://knuckles.team/kg/lakekeeper` is not yet in `scion-sdk`'s
+`https://knuckles-team.github.io/ontology/connector/lakekeeper` is not yet in `scion-sdk`'s
 `REGISTERED_FEDERATED_IRIS` whitelist
 (`scion_sdk/knowledge_graph/core/ontology_federation.py`) — the
 same onboarding step `jena`/`egeria` went through. Also a follow-up in

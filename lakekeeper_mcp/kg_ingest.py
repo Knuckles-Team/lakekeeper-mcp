@@ -1,10 +1,10 @@
-"""Native epistemic-graph ingestion for the Lakekeeper Iceberg catalog.
+"""Native medulla ingestion for the Lakekeeper Iceberg catalog.
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The record-source twin of the
 egeria/jena connectors: lakekeeper-mcp natively pushes the ONE live, reachable
 Iceberg-REST catalog (Trino/Spark's sibling lanes CA-52/CA-53 both proved real
 reads through this exact path — eg's own Iceberg-REST catalog is not reachable
-from other pods, CA-17/BUG-222) into the epistemic-graph engine as typed OWL
+from other pods, CA-17/BUG-222) into the medulla engine as typed OWL
 nodes (``:LakeWarehouse``, ``:IcebergCatalog``, ``:IcebergNamespace``,
 ``:IcebergTable``, ``:IcebergSnapshot``, ``:IcebergSchemaVersion``), with
 ``hasNamespace``/``hasTable``/``hasSnapshot``/``parentSnapshot``/``storedIn``/
