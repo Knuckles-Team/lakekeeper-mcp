@@ -31,6 +31,7 @@ The `lakekeeper-mcp` server serves its packaged skills, prompts and ontology to 
 ## Requirements
 
 - **FR-001**: Default content. Rows: `CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R001`.
+- **FR-002**: The packaged ontology extends only the core ontology and redeclares no core term (`CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R002`).
 
 ## Success Criteria
 
@@ -46,3 +47,4 @@ The `lakekeeper-mcp` server serves its packaged skills, prompts and ontology to 
 | Label | Rows | Design section | Test ID | Evidence |
 |---|---|---|---|---|
 | FR-001 | `CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R001` | [plan.md](plan.md) | T-001 | [test-spec.md](test-spec.md) |
+| FR-002 | `CONN-LAKEKEEPER-MCP-CONNECTOR-CONTENT-R002` | plan.md Production caller chain | T-002 | tests/test_ontology_extends_core.py::test_pack_declares_no_core_term |

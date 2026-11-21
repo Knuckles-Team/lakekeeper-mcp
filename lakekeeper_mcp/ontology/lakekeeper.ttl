@@ -74,12 +74,6 @@
     rdfs:domain :IcebergSnapshot ;
     rdfs:range :IcebergSnapshot .
 
-:storedIn a owl:ObjectProperty ;
-    rdfs:label "stored in" ;
-    rdfs:comment "Links an IcebergTable to the LakeWarehouse whose storage profile holds its data files." ;
-    rdfs:domain :IcebergTable ;
-    rdfs:range :LakeWarehouse .
-
 :hasSchemaVersion a owl:ObjectProperty ;
     rdfs:label "has schema version" ;
     rdfs:comment "Links an IcebergTable to one IcebergSchemaVersion in its schema-evolution history." ;
