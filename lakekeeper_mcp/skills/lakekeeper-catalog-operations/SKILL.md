@@ -2,16 +2,7 @@
 name: lakekeeper-catalog-operations
 skill_type: skill
 description: >-
-  Administer a Lakekeeper (Apache Iceberg REST catalog) deployment via the
-  lakekeeper-mcp MCP server's catalog/warehouse/ownership/maintenance tools —
-  list/inspect namespaces, tables, snapshots, and schema versions; list/inspect
-  warehouses and storage profiles; read and classify a table's write-authority
-  ownership (engine vs. Lakekeeper-native, DEC-CA-01/GOC-78); and request (never
-  execute) snapshot expiration or compaction. Use when the agent must inspect the
-  lakehouse's Iceberg catalog state, resolve which snapshot a table is on, or
-  classify who owns a table's write path. Do NOT use to run maintenance directly
-  (delegate to trino-mcp/spark-mcp) or to push catalog state into the KG (use
-  lakekeeper-kg-ingestion).
+  Administer a Lakekeeper Iceberg REST catalog via lakekeeper-mcp: inspect namespaces, tables, snapshots, schema versions and warehouses, classify table write ownership, and request (never execute) snapshot expiry or compaction. Use to inspect catalog state or resolve a table's snapshot. Do NOT use to run maintenance (use trino-mcp or spark-mcp) or KG ingestion (lakekeeper-kg-ingestion).
 license: MIT
 tags: [lakekeeper, iceberg, catalog, mcp]
 metadata:
@@ -20,10 +11,29 @@ metadata:
 ---
 # Lakekeeper Catalog Operations
 
+Scope: Administer a Lakekeeper (Apache Iceberg REST catalog) deployment via the lakekeeper-mcp MCP server's catalog/warehouse/ownership/maintenance tools — list/inspect namespaces, tables, snapshots, and schema versions; list/inspect warehouses and storage profiles; read and classify a table's write-authority ownership (engine vs. Lakekeeper-native, DEC-CA-01/GOC-78); and request (never execute) snapshot expiration or compaction. Use when the agent must inspect the lakehouse's Iceberg catalog state, resolve which snapshot a table is on, or classify who owns a table's write path. Do NOT use to run maintenance directly (delegate to trino-mcp/spark-mcp) or to push catalog state into the KG (use lakekeeper-kg-ingestion).
+
 Read/administer the Lakekeeper Iceberg REST catalog control plane — the ONE
 live, reachable Iceberg-REST catalog on this platform (Trino and Spark both
 proved real reads through it; eg's own Iceberg-REST catalog is not reachable
 from other pods).
+
+## Steps
+
+1. Discover the catalog for the warehouse with `lakekeeper_config` and verify the response names the warehouse and its prefix.
+2. List the structure with `lakekeeper_list_namespaces` and `lakekeeper_list_tables`, and verify the target namespace and table appear.
+3. Read state with `lakekeeper_get_table`, `lakekeeper_list_snapshots` and `lakekeeper_list_schema_versions`, and verify the snapshot ids and schema versions are returned.
+4. Read ownership with `lakekeeper_get_ownership` and classify only when needed with `lakekeeper_set_engine_owned`, and verify the new classification on a second `lakekeeper_get_ownership` call.
+5. Check maintenance need with `lakekeeper_maintenance_status` and name a delegation target with `lakekeeper_request_expire_snapshots` or `lakekeeper_request_compaction`, and verify the response only names a target and does not run maintenance.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Tool fails with an authentication error | `LAKEKEEPER_SERVICE_CLIENT_ID` or `LAKEKEEPER_SERVICE_CLIENT_SECRET` is missing, or the scope is wrong | Set both client variables and leave `LAKEKEEPER_OAUTH_SCOPE` at `lakekeeper` |
+| Typed error for a table or namespace | The name does not exist in this warehouse | List names with `lakekeeper_list_namespaces` and `lakekeeper_list_tables` and use the exact ones returned |
+| Non-JSON 200 failure | `LAKEKEEPER_URL` includes `/catalog` or points at a misrouted backend | Set `LAKEKEEPER_URL` to the bare origin without any `/catalog` suffix |
+| `lakekeeper_set_engine_owned` refuses | The table is already classified `lakekeeper-native` | Leave the classification as it is, because this fail-closed refusal is intended |
 
 ## When to use
 - Inspect namespaces/tables/schemas/snapshots in a warehouse (`lakekeeper_list_*`,
